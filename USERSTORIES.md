@@ -39,3 +39,7 @@
 `7.3 As a supporter, So that I can control my passive donations, I want to be able to set value limits on my donations e.g. min donation of £xx, max donation of £xx.`
 
 `7.4 As a supporter, So that I can control my passive donations, I want to be able to set time limits on my donations e.g. $xx per day / week / month.`
+
+`8. As a supporter, So that I can see the impact of my donations, I want to be able to find out how my beneficiaries are doing.`
+
+`9. As a beneficiary, So that I can let my supporters see how their donations are helping me, I want to provide updates on my progress.`
