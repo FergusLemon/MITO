@@ -43,3 +43,9 @@
 `8. As a supporter, So that I can see the impact of my donations, I want to be able to find out how my beneficiaries are doing.`
 
 `9. As a beneficiary, So that I can let my supporters see how their donations are helping me, I want to provide updates on my progress.`
+
+`10. As a trustee, So that I have proper records of my beneficiaries' finances, I want to be able to access the history of all donations they have received through the MITO app.`
+
+`11. As a supporter, So that I can see how much I have donated, I want to be able to see my entire donation history to all beneficiaries.`
+
+`11.1 As a supporter, So that I can see who I have supported, I want to be able to see all of the beneficiaries I have donated to and the history of my donations to them.`
