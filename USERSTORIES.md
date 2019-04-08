@@ -1,5 +1,9 @@
 # User Stories
 
+## Geographic Focus
+
+London (UK) for the MVP.
+
 ## Users
 
 1. **Supporter** - a person who offers financial donations to beneficiaries.
@@ -39,6 +43,8 @@
 `7.3 As a supporter, So that I can control my passive donations, I want to be able to set value limits on my donations e.g. min donation of £xx, max donation of £xx.`
 
 `7.4 As a supporter, So that I can control my passive donations, I want to be able to set time limits on my donations e.g. $xx per day / week / month.`
+
+`7.5 As a supporter, So that I can make my donations work harder, I want to be able to apply for GiftAid on my donations to beneficiaries.`
 
 `8. As a supporter, So that I can see the impact of my donations, I want to be able to find out how my beneficiaries are doing.`
 
