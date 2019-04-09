@@ -55,3 +55,13 @@ London (UK) for the MVP.
 `11. As a supporter, So that I can see how much I have donated, I want to be able to see my entire donation history to all beneficiaries.`
 
 `11.1 As a supporter, So that I can see who I have supported, I want to be able to see all of the beneficiaries I have donated to and the history of my donations to them.`
+
+`12. As an admin, So that I can always trace the flow of money, I want to have supporters' and beneficiaries' first and last names.`
+
+`12.1 As an admin, So that I can inform users of the platform, I want to have email addresses for supporters and trustees.`
+
+`13. As a supporter or trustee, So that I am not bombarded with notifications, I want to have full control over what notifications I receive in the app.`
+
+`13.1 As a supporter or trustee, So that I am not bombarded with emails, I want to have full control over what emails I recieve from MITO.`
+
+`13.2 As an admin, So that I can inform supporters or trustees of critical information, I want to be able to send critical emails irrespective of their email preferences.`
