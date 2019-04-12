@@ -63,6 +63,7 @@
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 **/ios/Runner/GoogleService-Info.plist
+**/ios/Runner.xcworkspace/
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
