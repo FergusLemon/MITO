@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
       title: 'MITO',
       theme: ThemeData(
           primarySwatch: Colors.red,
-      ), // ThemeData
+      ),// ThemeData
       home: Scaffold(
         appBar: AppBar(
           title: Text('Welcome to MITO'),
