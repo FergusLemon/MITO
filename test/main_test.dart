@@ -7,5 +7,6 @@ void main() {
     await tester.pumpWidget(MyApp());
 
     expect(find.text('Welcome to MITO'), findsOneWidget);
+    expect(find.byType(RaisedButton), findsNWidgets(3));
   });
 }

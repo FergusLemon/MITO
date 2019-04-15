@@ -15,8 +15,23 @@ class MyApp extends StatelessWidget {
           title: Text('Welcome to MITO'),
         ),// AppBar
         body: Center(
-          child: Text('Hello World'),
-        ),// Center
+            child: Column(
+                children: <Widget>[
+                  RaisedButton(
+                    onPressed: null,
+                    child: const Text('Sign In'),
+                  ),
+                  RaisedButton(
+                    onPressed: null,
+                    child: const Text('Sign In With Google'),
+                  ),
+                  RaisedButton(
+                    onPressed: null,
+                    child: const Text('Sign Up'),
+                  ),
+                ]
+            ),// Row
+          ),// Center
       ),// Scaffold
     );// Material App
   }
