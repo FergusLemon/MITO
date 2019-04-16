@@ -8,7 +8,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'MITO',
       theme: ThemeData(
-          primarySwatch: Colors.red,
+          primaryColor: Colors.red,
+          accentColor: Colors.orangeAccent[400],
+          brightness: Brightness.dark,
       ),// ThemeData
       home: Scaffold(
         appBar: AppBar(
@@ -16,20 +18,37 @@ class MyApp extends StatelessWidget {
         ),// AppBar
         body: Center(
             child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    'Help those around you if you can',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Flexible(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(40.0, 40.0, 40.0, 200.0),
+                        child: Text(
+                          'Help those around you if you can',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 36.0,
+                          ),
+                        ),
+                      ),
                   ),
                   RaisedButton(
                     onPressed: null,
                     child: const Text('LOGIN'),
+                    color: Colors.red,
+                    textColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius:
+                        BorderRadius.circular(30.0)),
                   ),
                   RaisedButton(
                     onPressed: null,
                     child: const Text('SIGN UP'),
+                    color: Colors.white,
+                    textColor: Colors.red,
+                    shape: RoundedRectangleBorder(borderRadius:
+                        BorderRadius.circular(30.0)),
                   ),
                 ],
             ),// Column
