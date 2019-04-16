@@ -17,20 +17,22 @@ class MyApp extends StatelessWidget {
         body: Center(
             child: Column(
                 children: <Widget>[
-                  RaisedButton(
-                    onPressed: null,
-                    child: const Text('Sign In'),
+                  Text(
+                    'Help those around you if you can',
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   RaisedButton(
                     onPressed: null,
-                    child: const Text('Sign In With Google'),
+                    child: const Text('LOGIN'),
                   ),
                   RaisedButton(
                     onPressed: null,
-                    child: const Text('Sign Up'),
+                    child: const Text('SIGN UP'),
                   ),
-                ]
-            ),// Row
+                ],
+            ),// Column
           ),// Center
       ),// Scaffold
     );// Material App
