@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(40.0, 40.0, 40.0, 200.0),
                         child: Text(
-                          'Help those around you if you can',
+                          'Help Those Around You',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -34,21 +34,40 @@ class MyApp extends StatelessWidget {
                         ),
                       ),
                   ),
-                  RaisedButton(
-                    onPressed: null,
-                    child: const Text('LOGIN'),
-                    color: Colors.red,
-                    textColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius:
-                        BorderRadius.circular(30.0)),
-                  ),
-                  RaisedButton(
-                    onPressed: null,
-                    child: const Text('SIGN UP'),
-                    color: Colors.white,
-                    textColor: Colors.red,
-                    shape: RoundedRectangleBorder(borderRadius:
-                        BorderRadius.circular(30.0)),
+                  ButtonTheme(
+                      minWidth: 200.0,
+                      height: 40.0,
+                      child: RaisedButton(
+                        onPressed: () {},
+                        child: Text(
+                            'LOGIN',
+                            style: TextStyle(
+                                fontSize: 18.0,
+                            ),
+                          ),
+                        color: Colors.red,
+                        textColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius:
+                            BorderRadius.circular(30.0)),
+                      ),
+                    ),
+                  SizedBox(height: 5.0),
+                  ButtonTheme(
+                      minWidth: 200.0,
+                      height: 40.0,
+                      child: RaisedButton(
+                        onPressed: () {},
+                        child: Text(
+                            'SIGN UP',
+                            style: TextStyle(
+                                fontSize: 18.0,
+                            ),
+                          ),
+                        color: Colors.white,
+                        textColor: Colors.red,
+                        shape: RoundedRectangleBorder(borderRadius:
+                            BorderRadius.circular(30.0)),
+                      ),
                   ),
                 ],
             ),// Column
