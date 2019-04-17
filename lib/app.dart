@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mito/screens/home-screen.dart';
+import 'package:mito/pages/home-page.dart';
 
 class MitoRootWidget extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class MitoRootWidgetState extends State<MitoRootWidget> {
       title: 'MITO',
       theme: _themeData,
       routes: {
-        '/': (BuildContext context) => HomeScreen(),
+        '/': (BuildContext context) => HomePage(),
       },
     );
   }
