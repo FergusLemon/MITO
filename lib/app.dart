@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mito/pages/home-page.dart';
+import 'package:mito/pages/home_page.dart';
 
 class MitoRootWidget extends StatefulWidget {
   @override
