@@ -1,3 +1,4 @@
+import 'package:mito/forms/registration_form.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -17,9 +18,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         body: const SingleChildScrollView(
             child: Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
-                child: const Text('TODO Input form fields'),
+                child: const RegistrationForm(),
+              ),
             ),
-        ),
     );
   }
 }

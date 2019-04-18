@@ -1,4 +1,5 @@
 import 'package:mito/pages/registration_page.dart';
+import 'package:mito/forms/registration_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -11,5 +12,6 @@ void main() {
     await tester.pumpWidget(app);
 
     expect(find.text('Registration'), findsOneWidget);
+    expect(find.byType(RegistrationForm), findsOneWidget);
   });
 }
