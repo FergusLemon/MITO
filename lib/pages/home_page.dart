@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:mito/pages/registration_page.dart';
 
 class HomePage extends StatefulWidget {
+  static const navigateToRegistrationButtonKey = Key('navigateToRegistration');
   @override
   const HomePage({ Key key }) : super(key: key);
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  void _navigateToRegistrationPage(BuildContext context) {
+    final route = MaterialPageRoute(builder: (_) => RegistrationPage());
+    Navigator.of(context).push(route);
+  }
+
   @override
   Widget build(BuildContext context) {
       return Scaffold(
@@ -53,7 +60,8 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 200.0,
                     height: 40.0,
                     child: RaisedButton(
-                      onPressed: () {},
+                      key: HomePage.navigateToRegistrationButtonKey,
+                      onPressed: () => _navigateToRegistrationPage(context),
                       child: Text(
                         'SIGN UP',
                         style: TextStyle(
