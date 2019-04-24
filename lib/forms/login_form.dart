@@ -25,11 +25,16 @@ class _LoginFormState extends State<LoginForm> {
                       labelText: 'Password',
                   ),
               ),
+              SizedBox(height: 10.0),
               RaisedButton(
                   onPressed: () {},
                   child: const Text(
                       'LOGIN',
                   ),
+                  color: Colors.red,
+                  textColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius:
+                    BorderRadius.circular(30.0)),
               ),
             ],
         ),

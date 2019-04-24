@@ -25,11 +25,16 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       labelText: 'Password',
                   ),
               ),
+              SizedBox(height: 10.0),
               RaisedButton(
                   onPressed: () {},
                   child: const Text(
                       'SIGN UP',
                   ),
+                  color: Colors.red,
+                  textColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius:
+                    BorderRadius.circular(30.0)),
               ),
             ],
         ),
