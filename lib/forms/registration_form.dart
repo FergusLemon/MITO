@@ -25,6 +25,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       labelText: 'Password',
                   ),
               ),
+              SizedBox(height: 12.0),
+              TextFormField(
+                  decoration: const InputDecoration(
+                      labelText: 'Confirm Password',
+                  ),
+              ),
               SizedBox(height: 10.0),
               RaisedButton(
                   onPressed: () {},

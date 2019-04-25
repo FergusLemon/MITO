@@ -15,7 +15,7 @@ void main() {
     await tester.pumpWidget(app);
 
     expect(find.text('SIGN UP'), findsOneWidget);
-    expect(find.byType(TextFormField), findsNWidgets(2));
+    expect(find.byType(TextFormField), findsNWidgets(3));
     expect(find.byType(RaisedButton), findsOneWidget);
   });
 }
