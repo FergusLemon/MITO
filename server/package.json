@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "firebase setup:emulators:firestore",
-    "startemulator": "firebase serve --only firestore > /dev/null",
+    "start-emulator": "firebase serve --only firestore",
     "pretest": "tsc",
     "test": "FIREBASE_FIRESTORE_EMULATOR_ADDRESS='127.0.0.1:8080' mocha",
     "postest": "rm test/**/*.js test/**/*.map",
@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@firebase/testing": "^0.9.1",
+    "@firebase/testing": "^0.9.4",
     "@types/mocha": "^5.2.6",
     "@types/uuid": "^3.4.4",
     "firebase-admin": "^7.3.0",
