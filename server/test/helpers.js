@@ -1,6 +1,9 @@
+// Great example tutorial from Angular University helped me with this code
+// available at https://angularfirebase.com/lessons/testing-firestore-security-rules-with-the-emulator/
 const firebase = require('@firebase/testing')
 const fs = require('fs')
 
+// Use a Generator function to create unique IDs
 function* IdGenerator() {
   let id = 0
   while (true) {
@@ -38,3 +41,33 @@ module.exports.setup = async (auth, data) => {
 module.exports.teardown = async () => {
   Promise.all(firebase.apps().map(app => app.delete()))
 }
+
+expect.extend({
+  async toAllow(x) {
+    let pass = false
+    try {
+      await firebase.assertSucceeds(x)
+      pass = true
+    } catch (err) {}
+
+    return {
+      pass,
+      message: () => 'Expected Firebase operation to be allowed, but it failed',
+    }
+  },
+})
+
+expect.extend({
+  async toDeny(x) {
+    let pass = false
+    try {
+      await firebase.assertFails(x)
+      pass = true
+    } catch (err) {}
+    return {
+      pass,
+      message: () =>
+        'Expected Firebase operation to be denied, but it was allowed',
+    }
+  },
+})

@@ -15,7 +15,6 @@ describe('Database rules', () => {
   })
 
   test('fail when reading/writing an unauthorized collection', async () => {
-    const failedRead = await assertFails(ref.get())
-    expect(failedRead)
+    await expect(ref.get()).toDeny()
   })
 })
