@@ -6,9 +6,8 @@
   "scripts": {
     "postinstall": "firebase setup:emulators:firestore",
     "start-emulator": "firebase serve --only firestore",
-    "pretest": "tsc",
-    "test": "FIREBASE_FIRESTORE_EMULATOR_ADDRESS='127.0.0.1:8080' mocha",
-    "postest": "rm test/**/*.js test/**/*.map",
+    "test": "FIREBASE_FIRESTORE_EMULATOR_ADDRESS='127.0.0.1:8080' jest",
+    "postest": "rm test/*.js test/*.map",
     "ci": "start-server-and-test start-emulator http-get://127.0.0.1:8080 test"
   },
   "keywords": [],
@@ -16,17 +15,9 @@
   "license": "ISC",
   "devDependencies": {
     "@firebase/testing": "^0.9.4",
-    "@types/mocha": "^5.2.6",
-    "@types/uuid": "^3.4.4",
     "firebase-tools": "^6.10.0",
-    "mocha": "^6.1.4",
-    "mocha-typescript": "^1.1.17",
-    "start-server-and-test": "^1.9.0",
-    "ts-node": "^8.1.0",
-    "typescript": "^3.4.5",
-    "uuid": "^3.3.2"
+    "jest": "^24.8.0",
+    "start-server-and-test": "^1.9.1"
   },
-  "dependencies": {
-    "firebase-admin": "^8.0.0"
-  }
+  "dependencies": {}
 }
