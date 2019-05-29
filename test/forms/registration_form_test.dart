@@ -18,4 +18,13 @@ void main() {
     expect(find.byType(TextFormField), findsNWidgets(3));
     expect(find.byType(RaisedButton), findsOneWidget);
   });
+
+  testWidgets('User needs to provide an email address', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    final Finder signUp = find.widgetWithText(RaisedButton, 'SIGN UP');
+    await tester.tap(signUp);
+    await tester.pump();
+
+    expect(find.text('Please enter an email address.'), findsOneWidget);
+  });
 }

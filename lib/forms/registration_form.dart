@@ -8,9 +8,12 @@ class RegistrationForm extends StatefulWidget {
 }
 
 class _RegistrationFormState extends State<RegistrationForm> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Form(
+        key: _formKey,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -18,6 +21,11 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   decoration: const InputDecoration(
                       labelText: 'Email',
                   ),
+                  validator: (String value) {
+                    if (value.trim().isEmpty) {
+                      return 'Please enter an email address.';
+                    }
+                  },
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -33,7 +41,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
               SizedBox(height: 10.0),
               RaisedButton(
-                  onPressed: () {},
+                  onPressed: _validateInputs,
                   child: const Text(
                       'SIGN UP',
                   ),
@@ -45,5 +53,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
             ],
         ),
     );
+  }
+
+  void _validateInputs() {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+    } else {
+      null;
+    }
   }
 }
