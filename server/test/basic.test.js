@@ -14,7 +14,11 @@ describe('Database rules', () => {
     await teardown()
   })
 
-  test('fail when reading/writing an unauthorized collection', async () => {
+  test('fail when reading an unauthorized collection', async () => {
     await expect(ref.get()).toDeny()
+  })
+
+  test('fail when writing to an unauthorized collection', async () => {
+    await expect(ref.add({ username: 'maliciousUser' })).toDeny()
   })
 })
