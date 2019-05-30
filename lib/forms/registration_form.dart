@@ -10,11 +10,19 @@ class RegistrationForm extends StatefulWidget {
 
 class _RegistrationFormState extends State<RegistrationForm> {
   final _formKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
+  final passwordController = TextEditingController();
+
+  void dispose() {
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Form(
         key: _formKey,
+        autovalidate: _autoValidate,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -30,6 +38,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       labelText: 'Password',
                   ),
                   validator: _validatePassword,
+                  controller: passwordController,
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -58,7 +67,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     if (form.validate()) {
       form.save();
     } else {
-      null;
+      setState(() => _autoValidate = true);
     }
   }
 

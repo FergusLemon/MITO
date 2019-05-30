@@ -72,6 +72,16 @@ void main() {
     expect(find.text(invalidPasswordMessage), findsOneWidget);
   });
 
+  testWidgets('User needs to enter a valid password - 24 or less chars', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    final invalidLongPassword = 'APasswordWithT00M@nyCharacters';
+    await tester.enterText(password, invalidLongPassword);
+    await tester.tap(signUp);
+    await tester.pump();
+
+    expect(find.text(invalidPasswordMessage), findsOneWidget);
+  });
+
   testWidgets('User sees no warning message when they enter a valid password', (WidgetTester tester) async {
     await tester.pumpWidget(app);
     final validPassword = 'B@tman99';
@@ -80,6 +90,26 @@ void main() {
     await tester.pump();
 
     expect(find.text(noPasswordMessage), findsNothing);
+    expect(find.text(invalidPasswordMessage), findsNothing);
+  });
+
+  testWidgets('Error message stays on screen after first invalid attempt from user until the password meets the validity criteria', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    final invalidPassword = '1234';
+    await tester.enterText(password, invalidPassword);
+    await tester.tap(signUp);
+    await tester.pump();
+
+    expect(find.text(invalidPasswordMessage), findsOneWidget);
+
+    await tester.pump();
+
+    expect(find.text(invalidPasswordMessage), findsOneWidget);
+
+    final validAttempt = '12345@Mt';
+    await tester.enterText(password, validAttempt);
+    await tester.pump();
+
     expect(find.text(invalidPasswordMessage), findsNothing);
   });
 }
