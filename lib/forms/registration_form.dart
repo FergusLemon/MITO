@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../helpers/form_validation_helpers.dart';
 
 class RegistrationForm extends StatefulWidget {
   @override
@@ -69,7 +70,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   bool _isValidEmail(String value) {
-    RegExp validEmailRegex = new RegExp(r'^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-    return validEmailRegex.hasMatch(value);
+    return validEmail.hasMatch(value);
   }
 }
