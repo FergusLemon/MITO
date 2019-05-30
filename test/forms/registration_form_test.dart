@@ -27,4 +27,30 @@ void main() {
 
     expect(find.text('Please enter an email address.'), findsOneWidget);
   });
+
+  testWidgets('User needs to provide a well formed email address', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    final Finder email = find.widgetWithText(TextFormField, 'Email');
+    final Finder signUp = find.widgetWithText(RaisedButton, 'SIGN UP');
+    final invalidEmail = 'invalid@comma,com';
+    await tester.enterText(email, invalidEmail);
+    await tester.tap(signUp);
+    await tester.pump();
+
+    expect(find.text('Please enter an email address.'), findsNothing);
+    expect(find.text('Please enter a valid email address.'), findsOneWidget);
+  });
+
+  testWidgets('User sees no warning message when they enter a valid email address', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    final Finder email = find.widgetWithText(TextFormField, 'Email');
+    final Finder signUp = find.widgetWithText(RaisedButton, 'SIGN UP');
+    final validEmail = 'valid@gmail.com';
+    await tester.enterText(email, validEmail);
+    await tester.tap(signUp);
+    await tester.pump();
+
+    expect(find.text('Please enter an email address.'), findsNothing);
+    expect(find.text('Please enter a valid email address.'), findsNothing);
+  });
 }

@@ -21,11 +21,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   decoration: const InputDecoration(
                       labelText: 'Email',
                   ),
-                  validator: (String value) {
-                    if (value.trim().isEmpty) {
-                      return 'Please enter an email address.';
-                    }
-                  },
+                  validator: _validateEmail,
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -62,5 +58,18 @@ class _RegistrationFormState extends State<RegistrationForm> {
     } else {
       null;
     }
+  }
+
+  String _validateEmail(String value) {
+    return value.trim().isEmpty 
+        ? 'Please enter an email address.' 
+        : _isValidEmail(value)
+        ? null
+        : 'Please enter a valid email address.';
+  }
+
+  bool _isValidEmail(String value) {
+    RegExp validEmailRegex = new RegExp(r'^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    return validEmailRegex.hasMatch(value);
   }
 }
