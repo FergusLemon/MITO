@@ -29,6 +29,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   decoration: const InputDecoration(
                       labelText: 'Password',
                   ),
+                  validator: _validatePassword,
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -71,5 +72,17 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   bool _isValidEmail(String value) {
     return validEmail.hasMatch(value);
+  }
+
+  String _validatePassword(String value) {
+    return value.trim().isEmpty
+        ? 'Please enter a password.'
+        : _isValidPassword(value)
+        ? null
+        : 'Please enter a valid password.';
+  }
+
+  bool _isValidPassword(String value) {
+    return validPassword.hasMatch(value);
   }
 }
