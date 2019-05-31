@@ -92,7 +92,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
         ? 'Please enter a password.'
         : _isValidPassword(value)
         ? null
-        : 'Please enter a valid password.';
+        : 'Please enter a valid password. Passwords must be between 8-24 characters and contain 1 lowercase, 1 uppercase and 1 special character.';
   }
 
   bool _isValidPassword(String value) {
