@@ -14,6 +14,7 @@ void main() {
 
   final Finder email = find.widgetWithText(TextFormField, 'Email');
   final Finder password = find.widgetWithText(TextFormField, 'Password');
+  final Finder confirmPassword = find.widgetWithText(TextFormField, 'Confirm Password');
   final Finder signUp = find.widgetWithText(RaisedButton, 'SIGN UP');
 
   testWidgets('Renders', (WidgetTester tester) async {
@@ -104,5 +105,38 @@ void main() {
     await tester.pump();
 
     expect(find.text(invalidPasswordMessage), findsNothing);
+  });
+
+  testWidgets('User needs to confirm their password', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    await tester.enterText(email, validEmail);
+    await tester.enterText(password, validPassword);
+    await tester.tap(signUp);
+    await tester.pump();
+
+    expect(find.text(noPasswordConfirmMessage), findsOneWidget);
+  });
+
+  testWidgets('User needs to confirm their password - must be the same password', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    await tester.enterText(email, validEmail);
+    await tester.enterText(password, validPassword);
+    await tester.enterText(confirmPassword, invalidPassword);
+    await tester.tap(signUp);
+    await tester.pump();
+
+    expect(find.text(notSamePasswordMessage), findsOneWidget);
+  });
+
+  testWidgets('User sees no warning message if they correctly confirm their password', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    await tester.enterText(email, validEmail);
+    await tester.enterText(password, validPassword);
+    await tester.enterText(confirmPassword, validPassword);
+    await tester.tap(signUp);
+    await tester.pump();
+
+    expect(find.text(noPasswordConfirmMessage), findsNothing);
+    expect(find.text(notSamePasswordMessage), findsNothing);
   });
 }

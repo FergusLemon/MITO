@@ -46,6 +46,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 decoration: const InputDecoration(
                   labelText: 'Confirm Password',
                 ),
+                validator: _confirmPassword,
+                obscureText: true,
               ),
               SizedBox(height: 10.0),
               RaisedButton(
@@ -95,5 +97,17 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   bool _isValidPassword(String value) {
     return validPassword.hasMatch(value);
+  }
+
+  String _confirmPassword(String value) {
+    return value.trim().isEmpty
+        ? 'Please confirm your password.'
+        : _isSamePassword(value)
+        ? null
+        : 'The passwords entered do not match.';
+  }
+
+  bool _isSamePassword(String value) {
+    return value == passwordController.text;
   }
 }
