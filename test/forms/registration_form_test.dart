@@ -12,6 +12,8 @@ void main() {
       ),
   );
 
+  final Finder firstName = find.widgetWithText(TextFormField, 'First Name');
+  final Finder lastName = find.widgetWithText(TextFormField, 'Last Name');
   final Finder email = find.widgetWithText(TextFormField, 'Email');
   final Finder password = find.widgetWithText(TextFormField, 'Password');
   final Finder confirmPassword = find.widgetWithText(TextFormField, 'Confirm Password');
@@ -21,7 +23,7 @@ void main() {
     await tester.pumpWidget(app);
 
     expect(find.text('SIGN UP'), findsOneWidget);
-    expect(find.byType(TextFormField), findsNWidgets(3));
+    expect(find.byType(TextFormField), findsNWidgets(5));
     expect(find.byType(RaisedButton), findsOneWidget);
   });
 
@@ -138,5 +140,39 @@ void main() {
 
     expect(find.text(noPasswordConfirmMessage), findsNothing);
     expect(find.text(notSamePasswordMessage), findsNothing);
+  });
+
+  testWidgets('User must enter their first name', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    await tester.tap(signUp);
+    await tester.pump();
+
+    expect(find.text(noFirstNameMessage), findsOneWidget);
+  });
+
+  testWidgets('User does not see an error message if they enter their first name', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    await tester.enterText(firstName, name);
+    await tester.tap(signUp);
+    await tester.pump();
+
+    expect(find.text(noFirstNameMessage), findsNothing);
+  });
+
+  testWidgets('User must enter their last name', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    await tester.tap(signUp);
+    await tester.pump();
+
+    expect(find.text(noLastNameMessage), findsOneWidget);
+  });
+
+  testWidgets('User does not see an error message if they enter their last name', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    await tester.enterText(lastName, surname);
+    await tester.tap(signUp);
+    await tester.pump();
+
+    expect(find.text(noLastNameMessage), findsNothing);
   });
 }

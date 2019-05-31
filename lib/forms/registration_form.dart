@@ -28,6 +28,20 @@ class _RegistrationFormState extends State<RegistrationForm> {
             children: <Widget>[
               TextFormField(
                 decoration: const InputDecoration(
+                  labelText: 'First Name',
+                ),
+                validator: _validateFirstName,
+              ),
+              SizedBox(height: 12.0),
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Last Name',
+                ),
+                validator: _validateLastName,
+              ),
+              SizedBox(height: 12.0),
+              TextFormField(
+                decoration: const InputDecoration(
                   labelText: 'Email',
                 ),
                 validator: _validateEmail,
@@ -73,6 +87,18 @@ class _RegistrationFormState extends State<RegistrationForm> {
     } else {
       setState(() => _autoValidate = true);
     }
+  }
+
+  String _validateFirstName(String value) {
+    return value.trim().isEmpty
+        ? 'Please enter your first name.'
+        : null;
+  }
+
+  String _validateLastName(String value) {
+    return value.trim().isEmpty
+        ? 'Please enter your last name.'
+        : null;
   }
 
   String _validateEmail(String value) {
