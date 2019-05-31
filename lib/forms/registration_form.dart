@@ -27,35 +27,37 @@ class _RegistrationFormState extends State<RegistrationForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextFormField(
-                  decoration: const InputDecoration(
-                      labelText: 'Email',
-                  ),
-                  validator: _validateEmail,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                ),
+                validator: _validateEmail,
               ),
               SizedBox(height: 12.0),
               TextFormField(
-                  decoration: const InputDecoration(
-                      labelText: 'Password',
-                  ),
-                  validator: _validatePassword,
-                  controller: passwordController,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                ),
+                validator: _validatePassword,
+                controller: passwordController,
+                obscureText: true,
               ),
               SizedBox(height: 12.0),
               TextFormField(
-                  decoration: const InputDecoration(
-                      labelText: 'Confirm Password',
-                  ),
+                decoration: const InputDecoration(
+                  labelText: 'Confirm Password',
+                ),
               ),
               SizedBox(height: 10.0),
               RaisedButton(
-                  onPressed: _validateInputs,
-                  child: const Text(
-                      'SIGN UP',
-                  ),
-                  color: Colors.red,
-                  textColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius:
-                    BorderRadius.circular(30.0)),
+                onPressed: _validateInputs,
+                child: const Text(
+                  'SIGN UP',
+                ),
+                color: Colors.red,
+                textColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius:
+                  BorderRadius.circular(30.0),
+                ),
               ),
             ],
         ),
