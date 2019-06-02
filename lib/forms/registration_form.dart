@@ -11,6 +11,9 @@ class RegistrationForm extends StatefulWidget {
 class _RegistrationFormState extends State<RegistrationForm> {
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   void dispose() {
@@ -31,6 +34,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   labelText: 'First Name',
                 ),
                 validator: _validateFirstName,
+                controller: firstNameController,
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -38,6 +42,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   labelText: 'Last Name',
                 ),
                 validator: _validateLastName,
+                controller: lastNameController,
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -45,6 +50,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   labelText: 'Email',
                 ),
                 validator: _validateEmail,
+                controller: emailController,
               ),
               SizedBox(height: 12.0),
               TextFormField(
