@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../helpers/form_validation_helpers.dart';
+import '../services/auth.dart';
 
 class RegistrationForm extends StatefulWidget {
-  @override
-  const RegistrationForm({Key key}) : super(key: key);
+  const RegistrationForm({Key key, this.auth}) : super(key: key);
+  final BaseAuth auth;
 
+  @override
   _RegistrationFormState createState() => _RegistrationFormState();
 }
 
@@ -17,6 +20,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
   final passwordController = TextEditingController();
 
   void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -71,7 +77,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
               SizedBox(height: 10.0),
               RaisedButton(
-                onPressed: _validateInputs,
+                onPressed: _attemptSignUp,
                 child: const Text(
                   'SIGN UP',
                 ),
@@ -86,10 +92,15 @@ class _RegistrationFormState extends State<RegistrationForm> {
     );
   }
 
-  void _validateInputs() {
+  void _attemptSignUp() async {
     final form = _formKey.currentState;
     if (form.validate()) {
-      form.save();
+      try {
+        String userId = await widget.auth.signUp(emailController.text, passwordController.text);
+        print('$userId');
+      } catch (e) {
+        print('Error: $e');
+      }
     } else {
       setState(() => _autoValidate = true);
     }

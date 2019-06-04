@@ -1,13 +1,20 @@
 import 'package:mito/forms/registration_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../helpers/form_validation_helpers.dart';
+import '../mocks/auth_mock.dart';
+import '../mocks/firebase_user_mock.dart';
 
 void main() {
-  const MaterialApp app = MaterialApp(
+  final authMock = AuthMock();
+  final firebaseUserMock = FirebaseUserMock();
+  MaterialApp app = MaterialApp(
       home: Scaffold(
           body: SingleChildScrollView(
-              child: RegistrationForm(),
+              child: RegistrationForm(auth: authMock),
           ),
       ),
   );
@@ -174,5 +181,21 @@ void main() {
     await tester.pump();
 
     expect(find.text(noLastNameMessage), findsNothing);
+  });
+
+  testWidgets('Calls createUserWithEmailAndPassword when valid details entered and button tapped', (WidgetTester tester) async {
+    await tester.runAsync(() async {
+      when(authMock.signUp(validEmail, validPassword))
+          .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
+      await tester.pumpWidget(app);
+      await tester.enterText(firstName, name);
+      await tester.enterText(lastName, surname);
+      await tester.enterText(email, validEmail);
+      await tester.enterText(password, validPassword);
+      await tester.enterText(confirmPassword, validPassword);
+      await tester.tap(signUp);
+    });
+
+    verify(authMock.signUp(validEmail, validPassword)).called(1);
   });
 }
