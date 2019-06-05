@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mito/pages/registration_page.dart';
 import 'package:mito/pages/login_page.dart';
+import 'package:mito/pages/home_page.dart';
 
 class LandingPage extends StatefulWidget {
   static const navigateToRegistrationButtonKey = Key('navigateToRegistration');
@@ -10,18 +11,37 @@ class LandingPage extends StatefulWidget {
   _LandingPageState createState() => _LandingPageState();
 }
 
+enum AuthStatus {
+  signedIn,
+  signedOut,
+}
+
+
 class _LandingPageState extends State<LandingPage> {
+  AuthStatus authStatus = AuthStatus.signedOut;
+
   void _navigateToRegistrationPage(BuildContext context) {
-    final route = MaterialPageRoute(builder: (_) => RegistrationPage());
+    final route = MaterialPageRoute(builder: (_) => RegistrationPage(onSignedIn: _signedIn));
     Navigator.of(context).push(route);
   }
+
   void _navigateToLoginPage(BuildContext context) {
     final route = MaterialPageRoute(builder: (_) => LoginPage());
     Navigator.of(context).push(route);
   }
 
+  void _signedIn() {
+    setState(() => authStatus = AuthStatus.signedIn);
+  }
+
   @override
   Widget build(BuildContext context) {
+    return authStatus == AuthStatus.signedOut
+        ? _buildAuthOptionsScreen()
+        : HomePage();
+  }
+
+  Widget _buildAuthOptionsScreen() {
       return Scaffold(
         appBar: AppBar(
           title: Text('Welcome to MITO'),

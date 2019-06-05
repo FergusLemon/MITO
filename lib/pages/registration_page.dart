@@ -4,7 +4,8 @@ import '../services/auth.dart';
 
 class RegistrationPage extends StatefulWidget {
   @override
-  const RegistrationPage({ Key key }) : super(key: key);
+  const RegistrationPage({ Key key, this.onSignedIn }) : super(key: key);
+  final VoidCallback onSignedIn;
   _RegistrationPageState createState() => _RegistrationPageState();
 }
 
@@ -19,7 +20,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         body: SingleChildScrollView(
             child: Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
-                child: RegistrationForm(auth: Auth()),
+                child: RegistrationForm(auth: Auth(), onSignedIn: widget.onSignedIn),
               ),
             ),
     );

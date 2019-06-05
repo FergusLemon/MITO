@@ -1,8 +1,10 @@
-import 'package:mito/forms/registration_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:mito/pages/home_page.dart';
+import 'package:mito/forms/registration_form.dart';
 
 import '../helpers/form_validation_helpers.dart';
 import '../mocks/auth_mock.dart';
@@ -11,10 +13,11 @@ import '../mocks/firebase_user_mock.dart';
 void main() {
   final authMock = AuthMock();
   final firebaseUserMock = FirebaseUserMock();
+  bool didSignIn;
   MaterialApp app = MaterialApp(
       home: Scaffold(
           body: SingleChildScrollView(
-              child: RegistrationForm(auth: authMock),
+              child: RegistrationForm(auth: authMock, onSignedIn: () => didSignIn = true),
           ),
       ),
   );
@@ -193,34 +196,45 @@ void main() {
     expect(find.text(noLastNameMessage), findsNothing);
   });
 
-  testWidgets('Calls signUp when valid details entered and button tapped', (WidgetTester tester) async {
-    when(authMock.signUp(validEmail, validPassword))
-        .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
-  
-    await completeValidSignUp(tester);
+  group('Auth status', () {
+    setUp(() => didSignIn = false);
 
-    verify(authMock.signUp(validEmail, validPassword)).called(1);
-  });
+    testWidgets('Calls signUp when valid details entered and button tapped', (WidgetTester tester) async {
+      when(authMock.signUp(validEmail, validPassword))
+          .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
+    
+      await completeValidSignUp(tester);
 
-  testWidgets('Does not call signUp if the registration form is empty and the button is tapped', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.tap(signUp);
+      verify(authMock.signUp(validEmail, validPassword)).called(1);
+      expect(didSignIn, true);
+    });
 
-    verifyNever(authMock.signUp(validEmail, validPassword));
-  });
+    testWidgets('Does not call signUp if the registration form is empty and the button is tapped', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.tap(signUp);
 
-  testWidgets('Does not call signUp if there were form validation error when the button is tapped', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.enterText(password, validPassword);
-    await tester.enterText(confirmPassword, invalidPassword);
-    await tester.tap(signUp);
+      verifyNever(authMock.signUp(validEmail, validPassword));
+      expect(didSignIn, false);
+    });
 
-    verifyNever(authMock.signUp(validEmail, validPassword));
-  });
+    testWidgets('Does not call signUp if there were form validation error when the button is tapped', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.enterText(password, validPassword);
+      await tester.enterText(confirmPassword, invalidPassword);
+      await tester.tap(signUp);
 
-  testWidgets('On valid sign up navigates away from the registration page', (WidgetTester tester) async {
-    await completeValidSignUp(tester);
+      verifyNever(authMock.signUp(validEmail, validPassword));
+      expect(didSignIn, false);
+    });
 
-    expect(find.text('Registration'), findsNothing);
+    testWidgets('On valid sign up navigates away from the registration page', (WidgetTester tester) async {
+      when(authMock.signUp(validEmail, validPassword))
+          .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
+    
+      await completeValidSignUp(tester);
+
+      expect(didSignIn, true);
+      expect(find.text('Registration'), findsNothing);
+    });
   });
 }

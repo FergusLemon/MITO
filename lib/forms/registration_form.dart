@@ -5,8 +5,9 @@ import '../helpers/password_validator.dart';
 import '../services/auth.dart';
 
 class RegistrationForm extends StatefulWidget {
-  const RegistrationForm({Key key, this.auth}) : super(key: key);
+  const RegistrationForm({Key key, this.auth, this.onSignedIn}) : super(key: key);
   final BaseAuth auth;
+  final VoidCallback onSignedIn;
 
   @override
   _RegistrationFormState createState() => _RegistrationFormState();
@@ -100,7 +101,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
       try {
         String userId = await widget.auth.signUp(_emailController.text, _passwordController.text);
         print('$userId');
-        Navigator.pop(context);
+        widget.onSignedIn();
+        Navigator.of(context).pop();
       } catch (e) {
         print('Error: $e');
       }
