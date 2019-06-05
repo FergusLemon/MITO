@@ -26,6 +26,16 @@ void main() {
   final Finder confirmPassword = find.widgetWithText(TextFormField, 'Confirm Password');
   final Finder signUp = find.widgetWithText(RaisedButton, 'SIGN UP');
 
+  void completeValidSignUp(WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    await tester.enterText(firstName, name);
+    await tester.enterText(lastName, surname);
+    await tester.enterText(email, validEmail);
+    await tester.enterText(password, validPassword);
+    await tester.enterText(confirmPassword, validPassword);
+    await tester.tap(signUp);
+  }
+
   testWidgets('Renders', (WidgetTester tester) async {
     await tester.pumpWidget(app);
 
@@ -157,7 +167,7 @@ void main() {
     expect(find.text(noFirstNameMessage), findsOneWidget);
   });
 
-  testWidgets('User does not see an error message if they enter their first name', (WidgetTester tester) async {
+  testWidgets('User does not see the error message if they enter their first name', (WidgetTester tester) async {
     await tester.pumpWidget(app);
     await tester.enterText(firstName, name);
     await tester.tap(signUp);
@@ -174,7 +184,7 @@ void main() {
     expect(find.text(noLastNameMessage), findsOneWidget);
   });
 
-  testWidgets('User does not see an error message if they enter their last name', (WidgetTester tester) async {
+  testWidgets('User does not see the error message if they enter their last name', (WidgetTester tester) async {
     await tester.pumpWidget(app);
     await tester.enterText(lastName, surname);
     await tester.tap(signUp);
@@ -184,17 +194,10 @@ void main() {
   });
 
   testWidgets('Calls createUserWithEmailAndPassword when valid details entered and button tapped', (WidgetTester tester) async {
-    await tester.runAsync(() async {
-      when(authMock.signUp(validEmail, validPassword))
-          .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
-      await tester.pumpWidget(app);
-      await tester.enterText(firstName, name);
-      await tester.enterText(lastName, surname);
-      await tester.enterText(email, validEmail);
-      await tester.enterText(password, validPassword);
-      await tester.enterText(confirmPassword, validPassword);
-      await tester.tap(signUp);
-    });
+    when(authMock.signUp(validEmail, validPassword))
+        .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
+  
+    await completeValidSignUp(tester);
 
     verify(authMock.signUp(validEmail, validPassword)).called(1);
   });
