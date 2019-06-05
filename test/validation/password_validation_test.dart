@@ -5,31 +5,31 @@ import 'package:mito/helpers/password_validator.dart';
 void main() {
   group('Valid passwords', () {
     test('returns true for short valid password', () {
-      expect(PasswordValidator.validate(caseShort), true);
+      expect(validatePassword(caseShort), true);
     });
     test('returns true for long valid password', () {
-      expect(PasswordValidator.validate(caseLong), true);
+      expect(validatePassword(caseLong), true);
     });
   });
 
   group('Invalid password', () {
     test('returns false for a password that is too short', () {
-      expect(PasswordValidator.validate(caseTooShort), false);
+      expect(validatePassword(caseTooShort), false);
     });
     test('returns false for a password that is too long', () {
-      expect(PasswordValidator.validate(caseTooLong), false);
+      expect(validatePassword(caseTooLong), false);
     });
     test('returns false for a password with no uppercase character', () {
-      expect(PasswordValidator.validate(caseNoUppercase), false);
+      expect(validatePassword(caseNoUppercase), false);
     });
     test('returns false for a password with no lowercase character', () {
-      expect(PasswordValidator.validate(caseNoLowercase), false);
+      expect(validatePassword(caseNoLowercase), false);
     });
     test('returns false for a password with no number', () {
-      expect(PasswordValidator.validate(caseNoNumber), false);
+      expect(validatePassword(caseNoNumber), false);
     });
     test('returns false for a password with no special character', () {
-      expect(PasswordValidator.validate(caseNoSpecialChar), false);
+      expect(validatePassword(caseNoSpecialChar), false);
     });
   });
 }

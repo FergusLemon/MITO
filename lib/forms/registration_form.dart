@@ -130,7 +130,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   bool _isValidEmail(String value) {
-    return EmailValidator.validate(value);
+    return validateEmail(value);
   }
 
   String _validatePassword(String value) {
@@ -142,7 +142,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   bool _isValidPassword(String value) {
-    return PasswordValidator.validate(value);
+    return validatePassword(value);
   }
 
   String _confirmPassword(String value) {
