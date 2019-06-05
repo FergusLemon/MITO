@@ -62,7 +62,7 @@ void main() {
     expect(find.text(invalidEmailMessage), findsOneWidget);
   });
 
-  testWidgets('User sees no warning message when they enter a valid email address', (WidgetTester tester) async {
+  testWidgets('User does not see the error message when they enter a valid email address', (WidgetTester tester) async {
     await tester.pumpWidget(app);
     await tester.enterText(email, validEmail);
     await tester.tap(signUp);
@@ -98,7 +98,7 @@ void main() {
     expect(find.text(invalidPasswordMessage), findsOneWidget);
   });
 
-  testWidgets('User sees no warning message when they enter a valid password', (WidgetTester tester) async {
+  testWidgets('User does not see the error message when they enter a valid password', (WidgetTester tester) async {
     await tester.pumpWidget(app);
     await tester.enterText(password, validPassword);
     await tester.tap(signUp);
@@ -147,7 +147,7 @@ void main() {
     expect(find.text(notSamePasswordMessage), findsOneWidget);
   });
 
-  testWidgets('User sees no warning message if they correctly confirm their password', (WidgetTester tester) async {
+  testWidgets('User does not see the error message if they correctly confirm their password', (WidgetTester tester) async {
     await tester.pumpWidget(app);
     await tester.enterText(email, validEmail);
     await tester.enterText(password, validPassword);
@@ -193,12 +193,29 @@ void main() {
     expect(find.text(noLastNameMessage), findsNothing);
   });
 
-  testWidgets('Calls createUserWithEmailAndPassword when valid details entered and button tapped', (WidgetTester tester) async {
+  testWidgets('Calls signUp when valid details entered and button tapped', (WidgetTester tester) async {
     when(authMock.signUp(validEmail, validPassword))
         .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
   
     await completeValidSignUp(tester);
 
     verify(authMock.signUp(validEmail, validPassword)).called(1);
+  });
+
+  testWidgets('Does not call signUp if the registration form is empty and the button is tapped', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    await tester.tap(signUp);
+
+    verifyNever(authMock.signUp(validEmail, validPassword));
+  });
+
+  testWidgets('Does not call signUp if there were form validation error when the button is tapped', (WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    await tester.enterText(email, validEmail);
+    await tester.enterText(password, validPassword);
+    await tester.enterText(confirmPassword, invalidPassword);
+    await tester.tap(signUp);
+
+    verifyNever(authMock.signUp(validEmail, validPassword));
   });
 }
