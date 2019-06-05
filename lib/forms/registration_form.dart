@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../helpers/form_validation_helpers.dart';
+import '../helpers/email_validator.dart';
+import '../helpers/password_validator.dart';
 import '../services/auth.dart';
 
 class RegistrationForm extends StatefulWidget {
@@ -129,7 +130,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   bool _isValidEmail(String value) {
-    return validEmail.hasMatch(value);
+    return EmailValidator.validate(value);
   }
 
   String _validatePassword(String value) {
@@ -141,7 +142,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   bool _isValidPassword(String value) {
-    return validPassword.hasMatch(value);
+    return PasswordValidator.validate(value);
   }
 
   String _confirmPassword(String value) {
