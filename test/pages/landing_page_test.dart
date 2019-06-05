@@ -4,10 +4,17 @@ import 'package:mockito/mockito.dart';
 import 'package:mito/pages/landing_page.dart';
 import 'package:mito/pages/registration_page.dart';
 import 'package:mito/pages/login_page.dart';
-
-class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+import '../mocks/navigator_mock.dart';
 
 void main() {
+  testWidgets("Renders content", (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: LandingPage()));
+
+    expect(find.text('Welcome to MITO'), findsOneWidget);
+    expect(find.text('Help Those Around You'), findsOneWidget);
+    expect(find.byType(RaisedButton), findsNWidgets(2));
+  });
+
   group('Landing Page navigation tests', () {
     NavigatorObserver mockObserver;
 
