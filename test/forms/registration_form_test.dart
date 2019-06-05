@@ -211,11 +211,16 @@ void main() {
 
   testWidgets('Does not call signUp if there were form validation error when the button is tapped', (WidgetTester tester) async {
     await tester.pumpWidget(app);
-    await tester.enterText(email, validEmail);
     await tester.enterText(password, validPassword);
     await tester.enterText(confirmPassword, invalidPassword);
     await tester.tap(signUp);
 
     verifyNever(authMock.signUp(validEmail, validPassword));
+  });
+
+  testWidgets('On valid sign up navigates away from the registration page', (WidgetTester tester) async {
+    await completeValidSignUp(tester);
+
+    expect(find.text('Registration'), findsNothing);
   });
 }

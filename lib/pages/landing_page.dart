@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:mito/pages/registration_page.dart';
 import 'package:mito/pages/login_page.dart';
 
-class HomePage extends StatefulWidget {
+class LandingPage extends StatefulWidget {
   static const navigateToRegistrationButtonKey = Key('navigateToRegistration');
   static const navigateToLoginButtonKey = Key('navigateToLogin');
   @override
-  const HomePage({ Key key }) : super(key: key);
-  _HomePageState createState() => _HomePageState();
+  const LandingPage({ Key key }) : super(key: key);
+  _LandingPageState createState() => _LandingPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _LandingPageState extends State<LandingPage> {
   void _navigateToRegistrationPage(BuildContext context) {
     final route = MaterialPageRoute(builder: (_) => RegistrationPage());
     Navigator.of(context).push(route);
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                       minWidth: 200.0,
                       height: 40.0,
                       child: RaisedButton(
-                        key: HomePage.navigateToLoginButtonKey,
+                        key: LandingPage.navigateToLoginButtonKey,
                         onPressed: () => _navigateToLoginPage(context),
                         child: Text(
                           'LOGIN',
@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 200.0,
                     height: 40.0,
                     child: RaisedButton(
-                      key: HomePage.navigateToRegistrationButtonKey,
+                      key: LandingPage.navigateToRegistrationButtonKey,
                       onPressed: () => _navigateToRegistrationPage(context),
                       child: Text(
                         'SIGN UP',

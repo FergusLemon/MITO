@@ -14,16 +14,17 @@ class RegistrationForm extends StatefulWidget {
 class _RegistrationFormState extends State<RegistrationForm> {
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   void dispose() {
-    firstNameController.dispose();
-    lastNameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -40,7 +41,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   labelText: 'First Name',
                 ),
                 validator: _validateFirstName,
-                controller: firstNameController,
+                controller: _firstNameController,
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -48,7 +49,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   labelText: 'Last Name',
                 ),
                 validator: _validateLastName,
-                controller: lastNameController,
+                controller: _lastNameController,
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -56,7 +57,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   labelText: 'Email',
                 ),
                 validator: _validateEmail,
-                controller: emailController,
+                controller: _emailController,
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -64,7 +65,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   labelText: 'Password',
                 ),
                 validator: _validatePassword,
-                controller: passwordController,
+                controller: _passwordController,
                 obscureText: true,
               ),
               SizedBox(height: 12.0),
@@ -96,8 +97,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
     final form = _formKey.currentState;
     if (form.validate()) {
       try {
-        String userId = await widget.auth.signUp(emailController.text, passwordController.text);
+        String userId = await widget.auth.signUp(_emailController.text, _passwordController.text);
         print('$userId');
+        Navigator.pop(context);
       } catch (e) {
         print('Error: $e');
       }
@@ -151,6 +153,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   bool _isSamePassword(String value) {
-    return value == passwordController.text;
+    return value == _passwordController.text;
   }
 }
