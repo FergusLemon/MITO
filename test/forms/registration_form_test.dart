@@ -9,6 +9,7 @@ import 'package:mito/forms/registration_form.dart';
 import '../helpers/form_validation_helpers.dart';
 import '../mocks/auth_mock.dart';
 import '../mocks/firebase_user_mock.dart';
+import '../mocks/navigator_mock.dart';
 
 void main() {
   final authMock = AuthMock();
@@ -197,12 +198,13 @@ void main() {
   });
 
   group('Auth status', () {
-    setUp(() => didSignIn = false);
+    setUp(() {
+      didSignIn = false;
+    });
 
     testWidgets('Calls signUp when valid details entered and button tapped', (WidgetTester tester) async {
       when(authMock.signUp(validEmail, validPassword))
           .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
-    
       await completeValidSignUp(tester);
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
@@ -227,10 +229,18 @@ void main() {
       expect(didSignIn, false);
     });
 
+    testWidgets('Does not sign a user in if an error was thrown from calling into Firebase', (WidgetTester tester) async {
+      when(authMock.signUp(validEmail, validPassword))
+          .thenThrow(StateError('User not authenticated.'));
+      await completeValidSignUp(tester);
+
+      verify(authMock.signUp(validEmail, validPassword)).called(1);
+      expect(didSignIn, false);
+    });
+
     testWidgets('On valid sign up navigates away from the registration page', (WidgetTester tester) async {
       when(authMock.signUp(validEmail, validPassword))
           .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
-    
       await completeValidSignUp(tester);
 
       expect(didSignIn, true);
