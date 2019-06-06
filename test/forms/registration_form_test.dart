@@ -10,7 +10,6 @@ import 'package:mito/inherited_auth.dart';
 import '../helpers/form_validation_helpers.dart';
 import '../mocks/auth_mock.dart';
 import '../mocks/firebase_user_mock.dart';
-import '../mocks/navigator_mock.dart';
 
 void main() {
   final authMock = AuthMock();
@@ -52,159 +51,161 @@ void main() {
     expect(find.byType(RaisedButton), findsOneWidget);
   });
 
-  testWidgets('User needs to enter an email address', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.tap(signUp);
-    await tester.pump();
+  group('Invalid user entries', () {
+    testWidgets('User needs to enter an email address', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.tap(signUp);
+      await tester.pump();
 
-    expect(find.text(noEmailMessage), findsOneWidget);
+      expect(find.text(noEmailMessage), findsOneWidget);
+    });
+
+    testWidgets('User needs to enter a well formed email address', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.enterText(email, invalidEmail);
+      await tester.tap(signUp);
+      await tester.pump();
+
+      expect(find.text(noEmailMessage), findsNothing);
+      expect(find.text(invalidEmailMessage), findsOneWidget);
+    });
+
+    testWidgets('User needs to enter a password', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.tap(signUp);
+      await tester.pump();
+
+      expect(find.text(noPasswordMessage), findsOneWidget);
+    });
+
+    testWidgets('User needs to enter a valid password', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.enterText(password, invalidPassword);
+      await tester.tap(signUp);
+      await tester.pump();
+
+      expect(find.text(invalidPasswordMessage), findsOneWidget);
+    });
+
+    testWidgets('User needs to enter a valid password - 24 or less chars', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.enterText(password, invalidLongPassword);
+      await tester.tap(signUp);
+      await tester.pump();
+
+      expect(find.text(invalidPasswordMessage), findsOneWidget);
+    });
+
+    testWidgets('User needs to confirm their password', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.enterText(email, validEmail);
+      await tester.enterText(password, validPassword);
+      await tester.tap(signUp);
+      await tester.pump();
+
+      expect(find.text(noPasswordConfirmMessage), findsOneWidget);
+    });
+
+    testWidgets('User needs to confirm their password - must be the same password', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.enterText(email, validEmail);
+      await tester.enterText(password, validPassword);
+      await tester.enterText(confirmPassword, invalidPassword);
+      await tester.tap(signUp);
+      await tester.pump();
+
+      expect(find.text(notSamePasswordMessage), findsOneWidget);
+    });
+
+    testWidgets('User must enter their first name', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.tap(signUp);
+      await tester.pump();
+
+      expect(find.text(noFirstNameMessage), findsOneWidget);
+    });
+
+    testWidgets('User must enter their last name', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.tap(signUp);
+      await tester.pump();
+
+      expect(find.text(noLastNameMessage), findsOneWidget);
+    });
+
+    testWidgets('Error message stays on screen after first invalid attempt from user until the password meets the validity criteria', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.enterText(password, invalidPassword);
+      await tester.tap(signUp);
+      await tester.pump();
+
+      expect(find.text(invalidPasswordMessage), findsOneWidget);
+
+      await tester.pump();
+
+      expect(find.text(invalidPasswordMessage), findsOneWidget);
+
+      await tester.enterText(password, validPassword);
+      await tester.pump();
+
+      expect(find.text(invalidPasswordMessage), findsNothing);
+    });
   });
 
-  testWidgets('User needs to enter a well formed email address', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.enterText(email, invalidEmail);
-    await tester.tap(signUp);
-    await tester.pump();
+  group('Valid user entries', () {
+    testWidgets('User does not see the error message when they enter a valid email address', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.enterText(email, validEmail);
+      await tester.tap(signUp);
+      await tester.pump();
 
-    expect(find.text(noEmailMessage), findsNothing);
-    expect(find.text(invalidEmailMessage), findsOneWidget);
-  });
+      expect(find.text(noEmailMessage), findsNothing);
+      expect(find.text(invalidEmailMessage), findsNothing);
+    });
 
-  testWidgets('User does not see the error message when they enter a valid email address', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.enterText(email, validEmail);
-    await tester.tap(signUp);
-    await tester.pump();
+    testWidgets('User does not see the error message when they enter a valid password', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.enterText(password, validPassword);
+      await tester.tap(signUp);
+      await tester.pump();
 
-    expect(find.text(noEmailMessage), findsNothing);
-    expect(find.text(invalidEmailMessage), findsNothing);
-  });
+      expect(find.text(noPasswordMessage), findsNothing);
+      expect(find.text(invalidPasswordMessage), findsNothing);
+    });
 
-  testWidgets('User needs to enter a password', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.tap(signUp);
-    await tester.pump();
+    testWidgets('User does not see the error message if they correctly confirm their password', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.enterText(email, validEmail);
+      await tester.enterText(password, validPassword);
+      await tester.enterText(confirmPassword, validPassword);
+      await tester.tap(signUp);
+      await tester.pump();
 
-    expect(find.text(noPasswordMessage), findsOneWidget);
-  });
+      expect(find.text(noPasswordConfirmMessage), findsNothing);
+      expect(find.text(notSamePasswordMessage), findsNothing);
+    });
 
-  testWidgets('User needs to enter a valid password', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.enterText(password, invalidPassword);
-    await tester.tap(signUp);
-    await tester.pump();
+    testWidgets('User does not see the error message if they enter their first name', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.enterText(firstName, name);
+      await tester.tap(signUp);
+      await tester.pump();
 
-    expect(find.text(invalidPasswordMessage), findsOneWidget);
-  });
+      expect(find.text(noFirstNameMessage), findsNothing);
+    });
 
-  testWidgets('User needs to enter a valid password - 24 or less chars', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.enterText(password, invalidLongPassword);
-    await tester.tap(signUp);
-    await tester.pump();
+    testWidgets('User does not see the error message if they enter their last name', (WidgetTester tester) async {
+      await tester.pumpWidget(app);
+      await tester.enterText(lastName, surname);
+      await tester.tap(signUp);
+      await tester.pump();
 
-    expect(find.text(invalidPasswordMessage), findsOneWidget);
-  });
-
-  testWidgets('User does not see the error message when they enter a valid password', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.enterText(password, validPassword);
-    await tester.tap(signUp);
-    await tester.pump();
-
-    expect(find.text(noPasswordMessage), findsNothing);
-    expect(find.text(invalidPasswordMessage), findsNothing);
-  });
-
-  testWidgets('Error message stays on screen after first invalid attempt from user until the password meets the validity criteria', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.enterText(password, invalidPassword);
-    await tester.tap(signUp);
-    await tester.pump();
-
-    expect(find.text(invalidPasswordMessage), findsOneWidget);
-
-    await tester.pump();
-
-    expect(find.text(invalidPasswordMessage), findsOneWidget);
-
-    await tester.enterText(password, validPassword);
-    await tester.pump();
-
-    expect(find.text(invalidPasswordMessage), findsNothing);
-  });
-
-  testWidgets('User needs to confirm their password', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.enterText(email, validEmail);
-    await tester.enterText(password, validPassword);
-    await tester.tap(signUp);
-    await tester.pump();
-
-    expect(find.text(noPasswordConfirmMessage), findsOneWidget);
-  });
-
-  testWidgets('User needs to confirm their password - must be the same password', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.enterText(email, validEmail);
-    await tester.enterText(password, validPassword);
-    await tester.enterText(confirmPassword, invalidPassword);
-    await tester.tap(signUp);
-    await tester.pump();
-
-    expect(find.text(notSamePasswordMessage), findsOneWidget);
-  });
-
-  testWidgets('User does not see the error message if they correctly confirm their password', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.enterText(email, validEmail);
-    await tester.enterText(password, validPassword);
-    await tester.enterText(confirmPassword, validPassword);
-    await tester.tap(signUp);
-    await tester.pump();
-
-    expect(find.text(noPasswordConfirmMessage), findsNothing);
-    expect(find.text(notSamePasswordMessage), findsNothing);
-  });
-
-  testWidgets('User must enter their first name', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.tap(signUp);
-    await tester.pump();
-
-    expect(find.text(noFirstNameMessage), findsOneWidget);
-  });
-
-  testWidgets('User does not see the error message if they enter their first name', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.enterText(firstName, name);
-    await tester.tap(signUp);
-    await tester.pump();
-
-    expect(find.text(noFirstNameMessage), findsNothing);
-  });
-
-  testWidgets('User must enter their last name', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.tap(signUp);
-    await tester.pump();
-
-    expect(find.text(noLastNameMessage), findsOneWidget);
-  });
-
-  testWidgets('User does not see the error message if they enter their last name', (WidgetTester tester) async {
-    await tester.pumpWidget(app);
-    await tester.enterText(lastName, surname);
-    await tester.tap(signUp);
-    await tester.pump();
-
-    expect(find.text(noLastNameMessage), findsNothing);
+      expect(find.text(noLastNameMessage), findsNothing);
+    });
   });
 
   group('Auth status', () {
-    setUp(() {
-      didSignIn = false;
-    });
+    setUp(() => didSignIn = false);
 
     testWidgets('Calls signUp when valid details entered and button tapped', (WidgetTester tester) async {
       when(authMock.signUp(validEmail, validPassword))
