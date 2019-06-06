@@ -4,11 +4,26 @@ import 'package:mockito/mockito.dart';
 import 'package:mito/pages/landing_page.dart';
 import 'package:mito/pages/registration_page.dart';
 import 'package:mito/pages/login_page.dart';
+import 'package:mito/inherited_auth.dart';
+import 'package:mito/services/user_state.dart';
 import '../mocks/navigator_mock.dart';
+import '../mocks/auth_mock.dart';
+import '../mocks/user_state_mock.dart';
 
 void main() {
+  final authMock = AuthMock();
+  final userStateMock = UserStateMock();
+  when(userStateMock.isSignedIn()).thenReturn(false);
+
   testWidgets("Renders content", (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: LandingPage()));
+    Widget app = InheritedAuth(
+      auth: authMock,
+      userState: userStateMock,
+      child: MaterialApp(
+      home: LandingPage(),
+      ),
+    );
+    await tester.pumpWidget(app);
 
     expect(find.text('Welcome to MITO'), findsOneWidget);
     expect(find.text('Help Those Around You'), findsOneWidget);
@@ -23,10 +38,15 @@ void main() {
     });
 
     Future<Null> _buildLandingPage(WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(
-        home: LandingPage(),
-        navigatorObservers: [mockObserver],
-      ));
+      Widget app = InheritedAuth(
+          auth: authMock,
+          userState: userStateMock,
+          child: MaterialApp(
+            home: LandingPage(),
+            navigatorObservers: [mockObserver],
+            ),
+        );
+      await tester.pumpWidget(app);
       verify(mockObserver.didPush(any, any));
     }
 

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mito/pages/landing_page.dart';
+import 'package:mito/inherited_auth.dart';
+import 'package:mito/services/auth.dart';
+import 'package:mito/services/user_state.dart';
 
 class MitoRootWidget extends StatefulWidget {
   @override
@@ -16,12 +19,16 @@ class MitoRootWidgetState extends State<MitoRootWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MITO',
-      theme: _themeData,
-      routes: {
-        '/': (BuildContext context) => LandingPage(),
-      },
-    );
+    return InheritedAuth(
+        auth: Auth(),
+        userState: UserState(),
+        child: MaterialApp(
+          title: 'MITO',
+          theme: _themeData,
+          routes: {
+            '/': (BuildContext context) => LandingPage(),
+          },
+        ),
+      );
   }
 }

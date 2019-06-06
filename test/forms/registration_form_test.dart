@@ -4,23 +4,27 @@ import 'package:mockito/mockito.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:mito/pages/home_page.dart';
+import 'package:mito/pages/landing_page.dart';
 import 'package:mito/forms/registration_form.dart';
 import 'package:mito/inherited_auth.dart';
+import 'package:mito/services/user_state.dart';
 
 import '../helpers/form_validation_helpers.dart';
 import '../mocks/auth_mock.dart';
+import '../mocks/user_state_mock.dart';
 import '../mocks/firebase_user_mock.dart';
 
 void main() {
   final authMock = AuthMock();
   final firebaseUserMock = FirebaseUserMock();
-  bool didSignIn;
+  final userStateMock = UserStateMock();
   Widget app = InheritedAuth(
       auth: authMock,
+      userState: userStateMock,
       child: MaterialApp(
         home: Scaffold(
           body: SingleChildScrollView(
-              child: RegistrationForm(onSignedIn: () => didSignIn = true),
+              child: RegistrationForm(),
           ),
         ),
       ),
@@ -205,15 +209,13 @@ void main() {
   });
 
   group('Auth status', () {
-    setUp(() => didSignIn = false);
-
     testWidgets('Calls signUp when valid details entered and button tapped', (WidgetTester tester) async {
       when(authMock.signUp(validEmail, validPassword))
           .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
       await completeValidSignUp(tester);
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
-      expect(didSignIn, true);
+      verify(userStateMock.signInUser()).called(1);
     });
 
     testWidgets('Does not call signUp if the registration form is empty and the button is tapped', (WidgetTester tester) async {
@@ -221,7 +223,7 @@ void main() {
       await tester.tap(signUp);
 
       verifyNever(authMock.signUp(validEmail, validPassword));
-      expect(didSignIn, false);
+      verifyNever(userStateMock.signInUser());
     });
 
     testWidgets('Does not call signUp if there were form validation error when the button is tapped', (WidgetTester tester) async {
@@ -231,7 +233,7 @@ void main() {
       await tester.tap(signUp);
 
       verifyNever(authMock.signUp(validEmail, validPassword));
-      expect(didSignIn, false);
+      verifyNever(userStateMock.signInUser());
     });
 
     testWidgets('Does not sign a user in if an error was thrown from calling into Firebase', (WidgetTester tester) async {
@@ -240,7 +242,7 @@ void main() {
       await completeValidSignUp(tester);
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
-      expect(didSignIn, false);
+      verifyNever(userStateMock.signInUser());
     });
 
     testWidgets('On valid sign up navigates away from the registration page', (WidgetTester tester) async {
@@ -248,8 +250,36 @@ void main() {
           .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
       await completeValidSignUp(tester);
 
-      expect(didSignIn, true);
+      verify(authMock.signUp(validEmail, validPassword)).called(1);
+      verify(userStateMock.signInUser()).called(1);
       expect(find.text('Registration'), findsNothing);
+    });
+
+    testWidgets('On valid sign up navigates user to the Home Page', (WidgetTester tester) async {
+      Widget testApp = InheritedAuth(
+          auth: authMock,
+          userState: userStateMock,
+          child: MaterialApp(
+            home: LandingPage(),
+          )
+      );
+      when(userStateMock.isSignedIn()).thenReturn(false);
+
+      await tester.pumpWidget(testApp);
+      await tester.tap(find.byKey(LandingPage.navigateToRegistrationButtonKey));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(firstName, name);
+      await tester.enterText(lastName, surname);
+      await tester.enterText(email, validEmail);
+      await tester.enterText(password, validPassword);
+      await tester.enterText(confirmPassword, validPassword);
+      await tester.tap(signUp);
+      when(userStateMock.isSignedIn()).thenReturn(true);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Registration'), findsNothing);
+      expect(find.byType(HomePage), findsOneWidget);
     });
   });
 }

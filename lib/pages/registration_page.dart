@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatefulWidget {
   @override
-  const RegistrationPage({ Key key, this.onSignedIn }) : super(key: key);
-  final VoidCallback onSignedIn;
+  const RegistrationPage({ Key key }) : super(key: key);
   _RegistrationPageState createState() => _RegistrationPageState();
 }
 
@@ -19,7 +18,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         body: SingleChildScrollView(
             child: Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
-                child: RegistrationForm(onSignedIn: widget.onSignedIn),
+                child: RegistrationForm(),
               ),
             ),
     );
