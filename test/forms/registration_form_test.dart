@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:mito/pages/home_page.dart';
 import 'package:mito/forms/registration_form.dart';
+import 'package:mito/inherited_auth.dart';
 
 import '../helpers/form_validation_helpers.dart';
 import '../mocks/auth_mock.dart';
@@ -15,13 +16,16 @@ void main() {
   final authMock = AuthMock();
   final firebaseUserMock = FirebaseUserMock();
   bool didSignIn;
-  MaterialApp app = MaterialApp(
-      home: Scaffold(
+  Widget app = InheritedAuth(
+      auth: authMock,
+      child: MaterialApp(
+        home: Scaffold(
           body: SingleChildScrollView(
-              child: RegistrationForm(auth: authMock, onSignedIn: () => didSignIn = true),
+              child: RegistrationForm(onSignedIn: () => didSignIn = true),
           ),
+        ),
       ),
-  );
+    );
 
   final Finder firstName = find.widgetWithText(TextFormField, 'First Name');
   final Finder lastName = find.widgetWithText(TextFormField, 'Last Name');

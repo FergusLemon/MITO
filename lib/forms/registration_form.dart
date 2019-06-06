@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mito/inherited_auth.dart';
 import '../helpers/email_validator.dart';
 import '../helpers/password_validator.dart';
-import '../services/auth.dart';
 
 class RegistrationForm extends StatefulWidget {
-  const RegistrationForm({Key key, this.auth, this.onSignedIn}) : super(key: key);
-  final BaseAuth auth;
+  const RegistrationForm({Key key, this.onSignedIn}) : super(key: key);
+  //final BaseAuth auth;
   final VoidCallback onSignedIn;
 
   @override
@@ -99,7 +99,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
     final form = _formKey.currentState;
     if (form.validate()) {
       try {
-        String userId = await widget.auth.signUp(_emailController.text, _passwordController.text);
+        final auth = InheritedAuth.of(context).auth;
+        String userId = await auth.signUp(_emailController.text, _passwordController.text);
         print('$userId');
         widget.onSignedIn();
         Navigator.of(context).pop();

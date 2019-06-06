@@ -1,6 +1,5 @@
 import 'package:mito/forms/registration_form.dart';
 import 'package:flutter/material.dart';
-import '../services/auth.dart';
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -20,7 +19,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         body: SingleChildScrollView(
             child: Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
-                child: RegistrationForm(auth: Auth(), onSignedIn: widget.onSignedIn),
+                child: RegistrationForm(onSignedIn: widget.onSignedIn),
               ),
             ),
     );
