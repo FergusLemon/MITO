@@ -4,6 +4,12 @@ import '../helpers/email_validator.dart';
 import '../helpers/password_validator.dart';
 
 class RegistrationForm extends StatefulWidget {
+  static const firstNameKey = Key('First Name');
+  static const lastNameKey = Key('Last Name');
+  static const emailKey = Key('Email');
+  static const passwordKey = Key('Password');
+  static const passwordConfirmKey = Key('Confirm Password');
+  static const signUpKey = Key('Sign Up');
   const RegistrationForm({Key key }) : super(key: key);
 
   @override
@@ -36,6 +42,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextFormField(
+                key: RegistrationForm.firstNameKey,
                 decoration: const InputDecoration(
                   labelText: 'First Name',
                 ),
@@ -44,6 +51,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
               SizedBox(height: 12.0),
               TextFormField(
+                key: RegistrationForm.lastNameKey,
                 decoration: const InputDecoration(
                   labelText: 'Last Name',
                 ),
@@ -52,6 +60,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
               SizedBox(height: 12.0),
               TextFormField(
+                key: RegistrationForm.emailKey,
                 decoration: const InputDecoration(
                   labelText: 'Email',
                 ),
@@ -60,6 +69,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
               SizedBox(height: 12.0),
               TextFormField(
+                key: RegistrationForm.passwordKey,
                 decoration: const InputDecoration(
                   labelText: 'Password',
                 ),
@@ -69,6 +79,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
               SizedBox(height: 12.0),
               TextFormField(
+                key: RegistrationForm.passwordConfirmKey,
                 decoration: const InputDecoration(
                   labelText: 'Confirm Password',
                 ),
@@ -77,6 +88,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
               SizedBox(height: 10.0),
               RaisedButton(
+                key: RegistrationForm.signUpKey,
                 onPressed: _attemptSignUp,
                 child: const Text(
                   'SIGN UP',

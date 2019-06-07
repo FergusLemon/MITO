@@ -30,12 +30,12 @@ void main() {
       ),
     );
 
-  final Finder firstName = find.widgetWithText(TextFormField, 'First Name');
-  final Finder lastName = find.widgetWithText(TextFormField, 'Last Name');
-  final Finder email = find.widgetWithText(TextFormField, 'Email');
-  final Finder password = find.widgetWithText(TextFormField, 'Password');
-  final Finder confirmPassword = find.widgetWithText(TextFormField, 'Confirm Password');
-  final Finder signUp = find.widgetWithText(RaisedButton, 'SIGN UP');
+  final Finder firstName = find.byKey(RegistrationForm.firstNameKey);
+  final Finder lastName = find.byKey(RegistrationForm.lastNameKey);
+  final Finder email = find.byKey(RegistrationForm.emailKey);
+  final Finder password = find.byKey(RegistrationForm.passwordKey);
+  final Finder confirmPassword = find.byKey(RegistrationForm.passwordConfirmKey);
+  final Finder signUp = find.byKey(RegistrationForm.signUpKey);
 
   void completeValidSignUp(WidgetTester tester) async {
     await tester.pumpWidget(app);
