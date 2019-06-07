@@ -5,7 +5,6 @@ import 'package:mito/pages/landing_page.dart';
 import 'package:mito/pages/registration_page.dart';
 import 'package:mito/pages/login_page.dart';
 import 'package:mito/inherited_auth.dart';
-import 'package:mito/services/user_state.dart';
 import '../mocks/navigator_mock.dart';
 import '../mocks/auth_mock.dart';
 import '../mocks/user_state_mock.dart';

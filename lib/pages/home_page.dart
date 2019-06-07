@@ -13,7 +13,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Welcome to MITO'),
+        title: Text('Home'),
       ),
       body: Text('Hello User'),
       );
