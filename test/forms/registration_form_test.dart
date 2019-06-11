@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:mito/pages/home_page.dart';
 import 'package:mito/pages/landing_page.dart';
@@ -13,14 +14,21 @@ import '../helpers/form_validation_helpers.dart';
 import '../mocks/auth_mock.dart';
 import '../mocks/user_state_mock.dart';
 import '../mocks/firebase_user_mock.dart';
+import '../mocks/firestore_mock.dart';
+import '../mocks/collection_reference_mock.dart';
+import '../mocks/document_reference_mock.dart';
 
 void main() {
   final authMock = AuthMock();
   final firebaseUserMock = FirebaseUserMock();
   final userStateMock = UserStateMock();
+  final firestoreMock = FirestoreMock();
+  final collectionReferenceMock = CollectionReferenceMock();
+  final documentReferenceMock = DocumentReferenceMock();
   Widget app = InheritedAuth(
       auth: authMock,
       userState: userStateMock,
+      firestore: firestoreMock,
       child: MaterialApp(
         home: Scaffold(
           body: SingleChildScrollView(
@@ -208,16 +216,7 @@ void main() {
     });
   });
 
-  group('Auth status', () {
-    testWidgets('Calls signUp when valid details entered and button tapped', (WidgetTester tester) async {
-      when(authMock.signUp(validEmail, validPassword))
-          .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
-      await completeValidSignUp(tester);
-
-      verify(authMock.signUp(validEmail, validPassword)).called(1);
-      verify(userStateMock.signInUser()).called(1);
-    });
-
+  group('Invalid sign ups', () {
     testWidgets('Does not call signUp if the registration form is empty and the button is tapped', (WidgetTester tester) async {
       await tester.pumpWidget(app);
       await tester.tap(signUp);
@@ -244,14 +243,36 @@ void main() {
       verify(authMock.signUp(validEmail, validPassword)).called(1);
       verifyNever(userStateMock.signInUser());
     });
+  });
 
-    testWidgets('On valid sign up navigates away from the registration page', (WidgetTester tester) async {
+  group('Valid sign ups', () {
+    var mockData;
+    setUp(() {
       when(authMock.signUp(validEmail, validPassword))
           .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
+      mockData = { 'email': validEmail, 'firstName': name, 'lastName': surname };
+      when(firestoreMock.collection('users'))
+          .thenReturn(collectionReferenceMock);
+      when(collectionReferenceMock.document(firebaseUserMock.uid))
+          .thenReturn(documentReferenceMock);
+      when(documentReferenceMock.setData(mockData))
+          .thenAnswer((_) => Future<void>.value(true));
+    });
+
+    testWidgets('Calls signUp when valid details entered and button tapped', (WidgetTester tester) async {
       await completeValidSignUp(tester);
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
       verify(userStateMock.signInUser()).called(1);
+      verify(documentReferenceMock.setData(mockData)).called(1);
+    });
+
+    testWidgets('On valid sign up navigates away from the registration page', (WidgetTester tester) async {
+      await completeValidSignUp(tester);
+
+      verify(authMock.signUp(validEmail, validPassword)).called(1);
+      verify(userStateMock.signInUser()).called(1);
+      verify(documentReferenceMock.setData(mockData)).called(1);
       expect(find.text('Registration'), findsNothing);
     });
 
@@ -259,6 +280,7 @@ void main() {
       Widget testApp = InheritedAuth(
           auth: authMock,
           userState: userStateMock,
+          firestore: firestoreMock,
           child: MaterialApp(
             home: LandingPage(),
           )
@@ -282,4 +304,5 @@ void main() {
       expect(find.byType(HomePage), findsOneWidget);
     });
   });
+
 }
