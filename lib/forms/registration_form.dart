@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mito/inherited_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../helpers/email_validator.dart';
 import '../helpers/password_validator.dart';
 
@@ -110,8 +111,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
       try {
         final auth = InheritedAuth.of(context).auth;
         final userState = InheritedAuth.of(context).userState;
-        String userId = await auth.signUp(_emailController.text, _passwordController.text);
-        print('$userId');
+        final Firestore store = Firestore.instance;
+        String uid = await auth.signUp(_emailController.text, _passwordController.text);
+        final userProfile = {
+          'email': _emailController.text,
+          'firstName': _firstNameController.text,
+          'lastName': _lastNameController.text,
+        };
+        await store.collection('users').document(uid).setData(userProfile);
         userState.signInUser();
         Navigator.of(context).pop();
       } catch (e) {
