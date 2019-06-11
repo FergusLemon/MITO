@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import './services/auth.dart';
 import './services/user_state.dart';
 
 class InheritedAuth extends InheritedWidget {
-  const InheritedAuth({Key key, Widget child, this.auth, this.userState}) : super(key: key, child: child);
+  const InheritedAuth({Key key, Widget child, this.auth, this.userState, this.firestore}) : super(key: key, child: child);
   final BaseAuth auth;
   final UserState userState;
+  final Firestore firestore;
 
   @override
 

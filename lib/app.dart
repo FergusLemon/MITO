@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mito/pages/landing_page.dart';
 import 'package:mito/inherited_auth.dart';
 import 'package:mito/services/auth.dart';
@@ -22,6 +23,7 @@ class MitoRootWidgetState extends State<MitoRootWidget> {
     return InheritedAuth(
         auth: Auth(),
         userState: UserState(),
+        firestore: Firestore.instance,
         child: MaterialApp(
           title: 'MITO',
           theme: _themeData,
