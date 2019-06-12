@@ -47,8 +47,18 @@ void main() {
 
   group('Validation of user inputs', () {
     group('Invalid inputs', () {
+      testWidgets('User is shown a warning if they do not enter anything', (WidgetTester tester) async {
+        await tester.pumpWidget(app);
+        await tester.tap(login);
+        await tester.pump();
+
+        expect(find.text(missingEmailWarning), findsOneWidget);
+        expect(find.text(missingPasswordWarning), findsOneWidget);
+      });
+
       testWidgets('User is shown a warning if they do not enter an email address', (WidgetTester tester) async {
         await tester.pumpWidget(app);
+        await tester.enterText(password, validPassword);
         await tester.tap(login);
         await tester.pump();
 
@@ -58,6 +68,7 @@ void main() {
       testWidgets('User is shown a warning if enter an invalid email address', (WidgetTester tester) async {
         await tester.pumpWidget(app);
         await tester.enterText(email, invalidEmail);
+        await tester.enterText(password, validPassword);
         await tester.tap(login);
         await tester.pump();
 
@@ -66,6 +77,7 @@ void main() {
 
       testWidgets('User is shown a warning if they do not enter a password', (WidgetTester tester) async {
         await tester.pumpWidget(app);
+        await tester.enterText(email, validEmail);
         await tester.tap(login);
         await tester.pump();
 
@@ -74,6 +86,7 @@ void main() {
 
       testWidgets('User is shown a warning if enter an invalid password', (WidgetTester tester) async {
         await tester.pumpWidget(app);
+        await tester.enterText(email, validEmail);
         await tester.enterText(password, invalidPassword);
         await tester.tap(login);
         await tester.pump();
