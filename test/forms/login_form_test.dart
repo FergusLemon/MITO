@@ -35,6 +35,7 @@ void main() {
 
   final Finder login = find.byKey(LoginForm.loginKey);
   final Finder email = find.byKey(LoginForm.emailKey);
+  final Finder password = find.byKey(LoginForm.passwordKey);
 
   testWidgets('Renders', (WidgetTester tester) async {
     await tester.pumpWidget(app);
@@ -61,6 +62,23 @@ void main() {
         await tester.pump();
 
         expect(find.text(invalidEmailWarning), findsOneWidget);
+      });
+
+      testWidgets('User is shown a warning if they do not enter a password', (WidgetTester tester) async {
+        await tester.pumpWidget(app);
+        await tester.tap(login);
+        await tester.pump();
+
+        expect(find.text(missingPasswordWarning), findsOneWidget);
+      });
+
+      testWidgets('User is shown a warning if enter an invalid password', (WidgetTester tester) async {
+        await tester.pumpWidget(app);
+        await tester.enterText(password, invalidPassword);
+        await tester.tap(login);
+        await tester.pump();
+
+        expect(find.text(notAPasswordWarning), findsOneWidget);
       });
     });
   });

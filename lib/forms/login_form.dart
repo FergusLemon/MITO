@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mito/inherited_auth.dart';
 import '../helpers/email_validator.dart';
+import '../helpers/password_validator.dart';
 
 class LoginForm extends StatefulWidget {
   static const loginKey = Key('Login button');
   static const emailKey = Key('Email field');
+  static const passwordKey = Key('Password field');
   const LoginForm({Key key}) : super(key: key);
 
   @override
@@ -29,9 +31,11 @@ class _LoginFormState extends State<LoginForm> {
               ),
               SizedBox(height: 12.0),
               TextFormField(
+                  key: LoginForm.passwordKey,
                   decoration: const InputDecoration(
                       labelText: 'Password',
                   ),
+                  validator: _validatePassword,
               ),
               SizedBox(height: 10.0),
               RaisedButton(
@@ -69,5 +73,17 @@ class _LoginFormState extends State<LoginForm> {
 
   bool _isValidEmail(String value) {
     return validateEmail(value);
+  }
+
+  String _validatePassword(String value) {
+    return value.trim().isEmpty
+        ? 'Please enter a password.'
+        : _isValidPassword(value)
+        ? null
+        : 'The password you entered is not a valid password.';
+  }
+
+  bool _isValidPassword(String value) {
+    return validatePassword(value);
   }
 }
