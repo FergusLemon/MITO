@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:mito/inherited_auth.dart';
+import '../helpers/email_validator.dart';
 
 class LoginForm extends StatefulWidget {
-  @override
+  static const loginKey = Key('Login button');
   const LoginForm({Key key}) : super(key: key);
 
+  @override
   _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Form(
+        key: _formKey,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -18,6 +23,7 @@ class _LoginFormState extends State<LoginForm> {
                   decoration: const InputDecoration(
                       labelText: 'Email',
                   ),
+                  validator: _validateEmail,
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -27,7 +33,8 @@ class _LoginFormState extends State<LoginForm> {
               ),
               SizedBox(height: 10.0),
               RaisedButton(
-                  onPressed: () {},
+                  key: LoginForm.loginKey,
+                  onPressed: _attemptLogin,
                   child: const Text(
                       'LOGIN',
                   ),
@@ -39,5 +46,26 @@ class _LoginFormState extends State<LoginForm> {
             ],
         ),
     );
+  }
+
+  void _attemptLogin() async {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      print('Sign in Successful');
+    } else {
+      print('Sign in Unsuccessful');
+    }
+  }
+
+  String _validateEmail(String value) {
+    return value.trim().isEmpty 
+        ? 'Please enter an email address.' 
+        : _isValidEmail(value)
+        ? null
+        : 'Please enter a valid email address.';
+  }
+
+  bool _isValidEmail(String value) {
+    return validateEmail(value);
   }
 }
