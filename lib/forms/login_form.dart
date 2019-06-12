@@ -4,6 +4,7 @@ import '../helpers/email_validator.dart';
 
 class LoginForm extends StatefulWidget {
   static const loginKey = Key('Login button');
+  static const emailKey = Key('Email field');
   const LoginForm({Key key}) : super(key: key);
 
   @override
@@ -20,6 +21,7 @@ class _LoginFormState extends State<LoginForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextFormField(
+                  key: LoginForm.emailKey,
                   decoration: const InputDecoration(
                       labelText: 'Email',
                   ),

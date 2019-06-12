@@ -34,6 +34,7 @@ void main() {
     );
 
   final Finder login = find.byKey(LoginForm.loginKey);
+  final Finder email = find.byKey(LoginForm.emailKey);
 
   testWidgets('Renders', (WidgetTester tester) async {
     await tester.pumpWidget(app);
@@ -44,12 +45,23 @@ void main() {
   });
 
   group('Validation of user inputs', () {
-    testWidgets('User is shown a warning if they do not enter an email address', (WidgetTester tester) async {
-      await tester.pumpWidget(app);
-      await tester.tap(login);
-      await tester.pump();
+    group('Invalid inputs', () {
+      testWidgets('User is shown a warning if they do not enter an email address', (WidgetTester tester) async {
+        await tester.pumpWidget(app);
+        await tester.tap(login);
+        await tester.pump();
 
-      expect(find.text(missingEmailWarning), findsOneWidget);
+        expect(find.text(missingEmailWarning), findsOneWidget);
+      });
+
+      testWidgets('User is shown a warning if enter an invalid email address', (WidgetTester tester) async {
+        await tester.pumpWidget(app);
+        await tester.enterText(email, invalidEmail);
+        await tester.tap(login);
+        await tester.pump();
+
+        expect(find.text(invalidEmailWarning), findsOneWidget);
+      });
     });
   });
 }
