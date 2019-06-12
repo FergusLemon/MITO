@@ -37,6 +37,14 @@ void main() {
   final Finder email = find.byKey(LoginForm.emailKey);
   final Finder password = find.byKey(LoginForm.passwordKey);
 
+  void completeValidLogin(WidgetTester tester) async {
+    await tester.pumpWidget(app);
+    await tester.enterText(email, validEmail);
+    await tester.enterText(password, validPassword);
+    await tester.tap(login);
+    await tester.pump();
+  };
+
   testWidgets('Renders', (WidgetTester tester) async {
     await tester.pumpWidget(app);
 
@@ -92,6 +100,17 @@ void main() {
         await tester.pump();
 
         expect(find.text(notAPasswordWarning), findsOneWidget);
+      });
+    });
+
+    group('Valid inputs', () {
+      testWidgets('User is not shown any warnings if they enter valid details', (WidgetTester tester) async {
+        await completeValidLogin(tester);
+
+        expect(find.text(missingEmailWarning), findsNothing);
+        expect(find.text(invalidEmailWarning), findsNothing);
+        expect(find.text(missingPasswordWarning), findsNothing);
+        expect(find.text(notAPasswordWarning), findsNothing);
       });
     });
   });
