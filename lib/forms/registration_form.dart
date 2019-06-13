@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mito/inherited_auth.dart';
 import '../helpers/email_validator.dart';
 import '../helpers/password_validator.dart';
+import '../helpers/validation_warnings.dart';
 
 class RegistrationForm extends StatefulWidget {
   static const firstNameKey = Key('First Name');
@@ -19,6 +20,7 @@ class RegistrationForm extends StatefulWidget {
 class _RegistrationFormState extends State<RegistrationForm> {
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
+  bool _isUniqueEmail = true;
 
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
@@ -31,6 +33,16 @@ class _RegistrationFormState extends State<RegistrationForm> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.addListener(onChange);
+  }
+
+  void onChange() {
+    _isUniqueEmail = true;
   }
 
   @override
@@ -104,7 +116,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     );
   }
 
-  void _attemptSignUp() async {
+  Future<String> _attemptSignUp() async {
     final form = _formKey.currentState;
     if (form.validate()) {
       try {
@@ -117,39 +129,50 @@ class _RegistrationFormState extends State<RegistrationForm> {
           'firstName': _firstNameController.text,
           'lastName': _lastNameController.text,
         };
-        userState.signInUser();
-        try {
-          await store.collection('users').document(uid).setData(userProfile);
-        } catch (e) {
-          print('Error: $e');
-        }
-        Navigator.of(context).pop();
+          try {
+            await store.collection('users').document(uid).setData(userProfile);
+            userState.signInUser();
+            Navigator.of(context).pop();
+          } catch (e) {
+            print('Error: $e');
+          }
       } catch (e) {
-        print('Error: $e');
+        print('${e.message}');
+        if (_emailAlreadyRegistered(e.message)) {
+          setState(() => _isUniqueEmail = false);
+          _attemptSignUp();
+        }
       }
     } else {
       setState(() => _autoValidate = true);
     }
+    return null;
+  }
+
+  bool _emailAlreadyRegistered(String errorMessage) {
+    return errorMessage == firebaseAuthErrorExistingEmail;
   }
 
   String _validateFirstName(String value) {
     return value.trim().isEmpty
-        ? 'Please enter your first name.'
+        ? missingFirstNameWarning
         : null;
   }
 
   String _validateLastName(String value) {
     return value.trim().isEmpty
-        ? 'Please enter your last name.'
+        ? missingLastNameWarning
         : null;
   }
 
   String _validateEmail(String value) {
     return value.trim().isEmpty 
-        ? 'Please enter an email address.' 
-        : _isValidEmail(value)
+        ? missingEmailWarning
+        : _isValidEmail(value) && _isUniqueEmail
         ? null
-        : 'Please enter a valid email address.';
+        : _isValidEmail(value)
+        ? registeredEmailWarning
+        : invalidEmailWarning;
   }
 
   bool _isValidEmail(String value) {
@@ -158,10 +181,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   String _validatePassword(String value) {
     return value.trim().isEmpty
-        ? 'Please enter a password.'
+        ? missingPasswordWarning
         : _isValidPassword(value)
         ? null
-        : 'Please enter a valid password. Passwords must be between 8-24 characters and contain 1 lowercase, 1 uppercase and 1 special character.';
+        : invalidPasswordWarning;
   }
 
   bool _isValidPassword(String value) {
@@ -170,10 +193,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   String _confirmPassword(String value) {
     return value.trim().isEmpty
-        ? 'Please confirm your password.'
+        ? missingPasswordConfirmWarning
         : _isSamePassword(value)
         ? null
-        : 'The passwords entered do not match.';
+        : notSamePasswordWarning;
   }
 
   bool _isSamePassword(String value) {

@@ -9,6 +9,7 @@ import 'package:mito/pages/landing_page.dart';
 import 'package:mito/forms/registration_form.dart';
 import 'package:mito/inherited_auth.dart';
 import 'package:mito/services/user_state.dart';
+import 'package:mito/helpers/validation_warnings.dart';
 
 import '../helpers/form_validation_helpers.dart';
 import '../mocks/auth_mock.dart';
@@ -242,6 +243,17 @@ void main() {
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
       verifyNever(userStateMock.signInUser());
+    });
+
+    testWidgets('Does not sign a user up if a user already exists with the same email', (WidgetTester tester) async {
+      when(authMock.signUp(validEmail, validPassword))
+          .thenThrow(StateError(firebaseAuthErrorExistingEmail));
+      await completeValidSignUp(tester);
+      await tester.pump();
+
+      verify(authMock.signUp(validEmail, validPassword)).called(1);
+      verifyNever(userStateMock.signInUser());
+      expect(find.text(registeredEmailWarning), findsOneWidget);
     });
   });
 
