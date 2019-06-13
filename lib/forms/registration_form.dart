@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mito/inherited_auth.dart';
+import 'package:mito/inherited_user_services.dart';
 import '../helpers/email_validator.dart';
 import '../helpers/password_validator.dart';
 import '../helpers/validation_warnings.dart';
@@ -120,9 +120,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
     final form = _formKey.currentState;
     if (form.validate()) {
       try {
-        final auth = InheritedAuth.of(context).auth;
-        final userState = InheritedAuth.of(context).userState;
-        final store = InheritedAuth.of(context).firestore;
+        final auth = InheritedUserServices.of(context).auth;
+        final userStatus = InheritedUserServices.of(context).userStatus;
+        final store = InheritedUserServices.of(context).firestore;
         String uid = await auth.signUp(_emailController.text, _passwordController.text);
         final userProfile = {
           'email': _emailController.text,
@@ -131,13 +131,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
         };
           try {
             await store.collection('users').document(uid).setData(userProfile);
-            userState.signInUser();
+            userStatus.signInUser();
             Navigator.of(context).pop();
           } catch (e) {
             print('Error: $e');
           }
       } catch (e) {
-        print('${e.message}');
         if (_emailAlreadyRegistered(e.message)) {
           setState(() => _isUniqueEmail = false);
           _attemptSignUp();

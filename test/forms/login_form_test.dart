@@ -6,24 +6,24 @@ import 'package:mockito/mockito.dart';
 import 'package:mito/pages/home_page.dart';
 import 'package:mito/pages/landing_page.dart';
 import 'package:mito/forms/login_form.dart';
-import 'package:mito/inherited_auth.dart';
-import 'package:mito/services/user_state.dart';
+import 'package:mito/inherited_user_services.dart';
+import 'package:mito/services/user_status.dart';
 import 'package:mito/helpers/validation_warnings.dart';
 
 import '../helpers/form_validation_helpers.dart';
 import '../mocks/auth_mock.dart';
-import '../mocks/user_state_mock.dart';
+import '../mocks/user_status_mock.dart';
 import '../mocks/firebase_user_mock.dart';
 import '../mocks/firestore_mock.dart';
 
 void main() {
   final authMock = AuthMock();
   final firebaseUserMock = FirebaseUserMock();
-  final userStateMock = UserStateMock();
+  final userStatusMock = UserStatusMock();
   final firestoreMock = FirestoreMock();
-  Widget app = InheritedAuth(
+  Widget app = InheritedUserServices(
       auth: authMock,
-      userState: userStateMock,
+      userStatus: userStatusMock,
       firestore: firestoreMock,
       child: MaterialApp(
         home: Scaffold(

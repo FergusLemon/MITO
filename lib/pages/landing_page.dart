@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mito/pages/registration_page.dart';
 import 'package:mito/pages/login_page.dart';
 import 'package:mito/pages/home_page.dart';
-import 'package:mito/inherited_auth.dart';
+import 'package:mito/inherited_user_services.dart';
 
 class LandingPage extends StatefulWidget {
   static const navigateToRegistrationButtonKey = Key('navigateToRegistration');
@@ -26,8 +26,8 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userState = InheritedAuth.of(context).userState;
-    return userState.isSignedIn() == false
+    final userStatus = InheritedUserServices.of(context).userStatus;
+    return userStatus.isSignedIn() == false
         ? _buildAuthOptionsScreen()
         : HomePage();
   }
@@ -93,8 +93,8 @@ class _LandingPageState extends State<LandingPage> {
                     ),
                   ),
               ],
-            ),// Column
-          ),// Center
-      );// Scaffold
+            ),
+          ),
+      );
   }
 }

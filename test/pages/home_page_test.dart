@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:mito/inherited_auth.dart';
+import 'package:mito/inherited_user_services.dart';
 import 'package:mito/pages/home_page.dart';
 import '../mocks/auth_mock.dart';
-import '../mocks/user_state_mock.dart';
+import '../mocks/user_status_mock.dart';
 
 void main() {
   final authMock = AuthMock();
-  final userStateMock = UserStateMock();
-  when(userStateMock.isSignedIn()).thenReturn(true);
+  final userStatusMock = UserStatusMock();
+  when(userStatusMock.isSignedIn()).thenReturn(true);
 
   Future<Null> _buildHomePage(WidgetTester tester) async {
-    Widget app = InheritedAuth(
+    Widget app = InheritedUserServices(
         auth: authMock,
-        userState: userStateMock,
+        userStatus: userStatusMock,
         child: MaterialApp(
           home: HomePage(),
           ),

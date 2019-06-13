@@ -7,13 +7,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mito/pages/home_page.dart';
 import 'package:mito/pages/landing_page.dart';
 import 'package:mito/forms/registration_form.dart';
-import 'package:mito/inherited_auth.dart';
-import 'package:mito/services/user_state.dart';
+import 'package:mito/inherited_user_services.dart';
+import 'package:mito/services/user_status.dart';
 import 'package:mito/helpers/validation_warnings.dart';
 
 import '../helpers/form_validation_helpers.dart';
 import '../mocks/auth_mock.dart';
-import '../mocks/user_state_mock.dart';
+import '../mocks/user_status_mock.dart';
 import '../mocks/firebase_user_mock.dart';
 import '../mocks/firestore_mock.dart';
 import '../mocks/collection_reference_mock.dart';
@@ -22,13 +22,13 @@ import '../mocks/document_reference_mock.dart';
 void main() {
   final authMock = AuthMock();
   final firebaseUserMock = FirebaseUserMock();
-  final userStateMock = UserStateMock();
+  final userStatusMock = UserStatusMock();
   final firestoreMock = FirestoreMock();
   final collectionReferenceMock = CollectionReferenceMock();
   final documentReferenceMock = DocumentReferenceMock();
-  Widget app = InheritedAuth(
+  Widget app = InheritedUserServices(
       auth: authMock,
-      userState: userStateMock,
+      userStatus: userStatusMock,
       firestore: firestoreMock,
       child: MaterialApp(
         home: Scaffold(
@@ -223,7 +223,7 @@ void main() {
       await tester.tap(signUp);
 
       verifyNever(authMock.signUp(validEmail, validPassword));
-      verifyNever(userStateMock.signInUser());
+      verifyNever(userStatusMock.signInUser());
     });
 
     testWidgets('Does not call signUp if there were form validation error when the button is tapped', (WidgetTester tester) async {
@@ -233,7 +233,7 @@ void main() {
       await tester.tap(signUp);
 
       verifyNever(authMock.signUp(validEmail, validPassword));
-      verifyNever(userStateMock.signInUser());
+      verifyNever(userStatusMock.signInUser());
     });
 
     testWidgets('Does not sign a user in if an error was thrown from calling into Firebase', (WidgetTester tester) async {
@@ -242,7 +242,7 @@ void main() {
       await completeValidSignUp(tester);
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
-      verifyNever(userStateMock.signInUser());
+      verifyNever(userStatusMock.signInUser());
     });
 
     testWidgets('Does not sign a user up if a user already exists with the same email', (WidgetTester tester) async {
@@ -252,7 +252,7 @@ void main() {
       await tester.pump();
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
-      verifyNever(userStateMock.signInUser());
+      verifyNever(userStatusMock.signInUser());
       expect(find.text(registeredEmailWarning), findsOneWidget);
     });
   });
@@ -275,7 +275,7 @@ void main() {
       await completeValidSignUp(tester);
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
-      verify(userStateMock.signInUser()).called(1);
+      verify(userStatusMock.signInUser()).called(1);
       verify(documentReferenceMock.setData(mockData)).called(1);
     });
 
@@ -283,21 +283,21 @@ void main() {
       await completeValidSignUp(tester);
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
-      verify(userStateMock.signInUser()).called(1);
+      verify(userStatusMock.signInUser()).called(1);
       verify(documentReferenceMock.setData(mockData)).called(1);
       expect(find.text('Registration'), findsNothing);
     });
 
     testWidgets('On valid sign up navigates user to the Home Page', (WidgetTester tester) async {
-      Widget testApp = InheritedAuth(
+      Widget testApp = InheritedUserServices(
           auth: authMock,
-          userState: userStateMock,
+          userStatus: userStatusMock,
           firestore: firestoreMock,
           child: MaterialApp(
             home: LandingPage(),
           )
       );
-      when(userStateMock.isSignedIn()).thenReturn(false);
+      when(userStatusMock.isSignedIn()).thenReturn(false);
 
       await tester.pumpWidget(testApp);
       await tester.tap(find.byKey(LandingPage.navigateToRegistrationButtonKey));
@@ -309,7 +309,7 @@ void main() {
       await tester.enterText(password, validPassword);
       await tester.enterText(confirmPassword, validPassword);
       await tester.tap(signUp);
-      when(userStateMock.isSignedIn()).thenReturn(true);
+      when(userStatusMock.isSignedIn()).thenReturn(true);
       await tester.pumpAndSettle();
 
       expect(find.text('Registration'), findsNothing);

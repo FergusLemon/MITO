@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mito/inherited_auth.dart';
+import 'package:mito/inherited_user_services.dart';
 import '../helpers/email_validator.dart';
 import '../helpers/password_validator.dart';
 

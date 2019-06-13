@@ -4,20 +4,20 @@ import 'package:mockito/mockito.dart';
 import 'package:mito/pages/landing_page.dart';
 import 'package:mito/pages/registration_page.dart';
 import 'package:mito/pages/login_page.dart';
-import 'package:mito/inherited_auth.dart';
+import 'package:mito/inherited_user_services.dart';
 import '../mocks/navigator_mock.dart';
 import '../mocks/auth_mock.dart';
-import '../mocks/user_state_mock.dart';
+import '../mocks/user_status_mock.dart';
 
 void main() {
   final authMock = AuthMock();
-  final userStateMock = UserStateMock();
-  when(userStateMock.isSignedIn()).thenReturn(false);
+  final userStatusMock = UserStatusMock();
+  when(userStatusMock.isSignedIn()).thenReturn(false);
 
   testWidgets("Renders content", (WidgetTester tester) async {
-    Widget app = InheritedAuth(
+    Widget app = InheritedUserServices(
       auth: authMock,
-      userState: userStateMock,
+      userStatus: userStatusMock,
       child: MaterialApp(
       home: LandingPage(),
       ),
@@ -37,9 +37,9 @@ void main() {
     });
 
     Future<Null> _buildLandingPage(WidgetTester tester) async {
-      Widget app = InheritedAuth(
+      Widget app = InheritedUserServices(
           auth: authMock,
-          userState: userStateMock,
+          userStatus: userStatusMock,
           child: MaterialApp(
             home: LandingPage(),
             navigatorObservers: [mockObserver],
