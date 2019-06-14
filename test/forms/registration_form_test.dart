@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:mito/pages/home_page.dart';
 import 'package:mito/pages/landing_page.dart';
+import 'package:mito/pages/login_page.dart';
 import 'package:mito/forms/registration_form.dart';
 import 'package:mito/inherited_user_services.dart';
 import 'package:mito/services/user_status.dart';
@@ -45,6 +46,7 @@ void main() {
   final Finder password = find.byKey(RegistrationForm.passwordKey);
   final Finder confirmPassword = find.byKey(RegistrationForm.passwordConfirmKey);
   final Finder signUp = find.byKey(RegistrationForm.signUpKey);
+  final Finder navigateToLogin = find.byKey(RegistrationForm.navigateToLogin);
 
   void fillInFormAndSubmit(WidgetTester tester) async {
     await tester.pumpWidget(app);
@@ -287,18 +289,27 @@ void main() {
       verify(documentReferenceMock.setData(mockData)).called(1);
       expect(find.text('Registration'), findsNothing);
     });
+  });
+
+  group('Navigation to other pages', () {
+    setUp(() {
+      when(userStatusMock.isSignedIn()).thenReturn(false);
+    });
+
+    tearDown(() {
+      clearInteractions(userStatusMock);
+    });
+
+    Widget testApp = InheritedUserServices(
+      auth: authMock,
+      userStatus: userStatusMock,
+      firestore: firestoreMock,
+      child: MaterialApp(
+        home: LandingPage(),
+      )
+    );
 
     testWidgets('On valid sign up navigates user to the Home Page', (WidgetTester tester) async {
-      Widget testApp = InheritedUserServices(
-          auth: authMock,
-          userStatus: userStatusMock,
-          firestore: firestoreMock,
-          child: MaterialApp(
-            home: LandingPage(),
-          )
-      );
-      when(userStatusMock.isSignedIn()).thenReturn(false);
-
       await tester.pumpWidget(testApp);
       await tester.tap(find.byKey(LandingPage.navigateToRegistrationButtonKey));
       await tester.pumpAndSettle();
@@ -315,5 +326,19 @@ void main() {
       expect(find.text('Registration'), findsNothing);
       expect(find.byType(HomePage), findsOneWidget);
     });
+
+    testWidgets('''There should be an option for a user to login if they already
+        have an account but clicked through to the registration page by mistake''', (WidgetTester tester) async {
+        await tester.pumpWidget(testApp);
+        await tester.tap(find.byKey(LandingPage.navigateToRegistrationButtonKey));
+        await tester.pumpAndSettle();
+           
+        expect(find.text(goToLoginPage), findsOneWidget);
+
+        await tester.tap(navigateToLogin);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(LoginPage), findsOneWidget);
+      });
   });
 }

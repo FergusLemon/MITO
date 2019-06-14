@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mito/inherited_user_services.dart';
+import 'package:mito/pages/login_page.dart';
 import '../helpers/email_validator.dart';
 import '../helpers/password_validator.dart';
 import '../helpers/validation_warnings.dart';
@@ -11,6 +12,7 @@ class RegistrationForm extends StatefulWidget {
   static const passwordKey = Key('Password');
   static const passwordConfirmKey = Key('Confirm Password');
   static const signUpKey = Key('Sign Up');
+  static const navigateToLogin = Key('Navigate registered user to login');
   const RegistrationForm({Key key }) : super(key: key);
 
   @override
@@ -111,6 +113,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   BorderRadius.circular(30.0),
                 ),
               ),
+              SizedBox(height: 20.0),
+              FlatButton(
+                  key: RegistrationForm.navigateToLogin,
+                  onPressed: () => _navigateToLoginPage(context),
+                  child: Text(
+                     'Already got an account? Login.',
+                  ),
+              ),
             ],
         ),
     );
@@ -200,5 +210,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   bool _isSamePassword(String value) {
     return value == _passwordController.text;
+  }
+
+  void _navigateToLoginPage(BuildContext context) {
+    final route = MaterialPageRoute(builder: (_) => LoginPage());
+    Navigator.of(context).push(route);
   }
 }

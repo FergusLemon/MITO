@@ -18,3 +18,6 @@ const incorrectPasswordWarning = 'The password entered is incorrect.';
 const firebaseAuthErrorExistingEmail = 'The email address is already in use by another account.';
 const firebaseInvalidPassword = 'The password is invalid or the user does not have a password.';
 const firebaseUserNotFound = 'There is no user record corresponding to this identifier. The user may have been deleted.';
+
+// registration form message
+const goToLoginPage = 'Already got an account? Login.';
