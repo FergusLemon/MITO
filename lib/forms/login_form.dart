@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mito/inherited_user_services.dart';
 import '../helpers/email_validator.dart';
 import '../helpers/password_validator.dart';
+import '../helpers/validation_warnings.dart';
 
 class LoginForm extends StatefulWidget {
   static const loginKey = Key('Login button');
@@ -17,6 +18,24 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _registeredUser = true;
+  bool _correctPassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.addListener(onEmailChange);
+    _passwordController.addListener(onPasswordChange);
+  }
+
+  void onEmailChange() {
+    _registeredUser = true;
+  }
+
+  void onPasswordChange() {
+    _correctPassword = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -69,7 +88,15 @@ class _LoginFormState extends State<LoginForm> {
         userStatus.signInUser();
         Navigator.of(context).pop();
       } catch(e) {
-        print('$e');
+        if (_unregisteredUser(e.message)) {
+          setState(() => _registeredUser = false);
+          _attemptLogin();
+        } else if (_incorrectPassword(e.message)) {
+          setState(() => _correctPassword = false);
+          _attemptLogin();
+        } else {
+          print('$e');
+        }
       }
     } else {
       print('Sign in Unsuccessful');
@@ -78,25 +105,37 @@ class _LoginFormState extends State<LoginForm> {
 
   String _validateEmail(String value) {
     return value.trim().isEmpty 
-        ? 'Please enter an email address.' 
-        : _isValidEmail(value)
+        ? missingEmailWarning
+        : _isValidEmail(value) && _registeredUser
         ? null
-        : 'Please enter a valid email address.';
+        : _isValidEmail(value)
+        ? userNotFoundWarning
+        : invalidEmailWarning;
   }
 
   bool _isValidEmail(String value) {
     return validateEmail(value);
   }
 
+  bool _unregisteredUser(String errorMessage) {
+    return errorMessage == firebaseUserNotFound;
+  }
+
   String _validatePassword(String value) {
     return value.trim().isEmpty
-        ? 'Please enter a password.'
-        : _isValidPassword(value)
+        ? missingPasswordWarning
+        : _isValidPassword(value) && _correctPassword
         ? null
-        : 'The password you entered is not a valid password.';
+        : _isValidPassword(value)
+        ? incorrectPasswordWarning
+        : notAPasswordWarning;
   }
 
   bool _isValidPassword(String value) {
     return validatePassword(value);
+  }
+
+  bool _incorrectPassword(String errorMessage) {
+    return errorMessage == firebaseInvalidPassword;
   }
 }

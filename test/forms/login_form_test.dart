@@ -38,7 +38,7 @@ void main() {
   final Finder email = find.byKey(LoginForm.emailKey);
   final Finder password = find.byKey(LoginForm.passwordKey);
 
-  void completeValidLogin(WidgetTester tester) async {
+  void fillInFormAndSubmit(WidgetTester tester) async {
     await tester.pumpWidget(app);
     await tester.enterText(email, validEmail);
     await tester.enterText(password, validPassword);
@@ -115,7 +115,7 @@ void main() {
       });
 
       testWidgets('User is not shown any warnings if they enter valid details', (WidgetTester tester) async {
-        await completeValidLogin(tester);
+        await fillInFormAndSubmit(tester);
 
         expect(find.text(missingEmailWarning), findsNothing);
         expect(find.text(invalidEmailWarning), findsNothing);
@@ -136,7 +136,7 @@ void main() {
     });
 
     testWidgets('Calls signIn when valid details entered and button tapped', (WidgetTester tester) async {
-      await completeValidLogin(tester);
+      await fillInFormAndSubmit(tester);
 
       verify(authMock.signIn(validEmail, validPassword)).called(1);
       verify(userStatusMock.signInUser()).called(1);
@@ -166,6 +166,33 @@ void main() {
       expect(find.text('Email'), findsNothing);
       expect(find.text('Password'), findsNothing);
       expect(find.byType(HomePage), findsOneWidget);
+    });
+  });
+
+  group('Sign in error cases', () {
+    tearDown(() {
+      clearInteractions(authMock);
+      clearInteractions(userStatusMock);
+    });
+
+    testWidgets('''User sees a warning message if there is no registered user
+        with the email address entered''', (WidgetTester tester) async {
+        when(authMock.signIn(validEmail, validPassword))
+            .thenThrow(StateError(firebaseUserNotFound));
+        await fillInFormAndSubmit(tester);
+
+        verifyNever(userStatusMock.signInUser());
+        expect(find.text(userNotFoundWarning), findsOneWidget);
+    });
+
+    testWidgets('''User sees a warning message if they enter a password not
+        associated with the email address entered''', (WidgetTester tester) async {
+        when(authMock.signIn(validEmail, validPassword))
+            .thenThrow(StateError(firebaseInvalidPassword));
+        await fillInFormAndSubmit(tester);
+
+        verifyNever(userStatusMock.signInUser());
+        expect(find.text(incorrectPasswordWarning), findsOneWidget);
     });
   });
 }

@@ -46,7 +46,7 @@ void main() {
   final Finder confirmPassword = find.byKey(RegistrationForm.passwordConfirmKey);
   final Finder signUp = find.byKey(RegistrationForm.signUpKey);
 
-  void completeValidSignUp(WidgetTester tester) async {
+  void fillInFormAndSubmit(WidgetTester tester) async {
     await tester.pumpWidget(app);
     await tester.enterText(firstName, name);
     await tester.enterText(lastName, surname);
@@ -239,7 +239,7 @@ void main() {
     testWidgets('Does not sign a user in if an error was thrown from calling into Firebase', (WidgetTester tester) async {
       when(authMock.signUp(validEmail, validPassword))
           .thenThrow(StateError('User not authenticated.'));
-      await completeValidSignUp(tester);
+      await fillInFormAndSubmit(tester);
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
       verifyNever(userStatusMock.signInUser());
@@ -248,7 +248,7 @@ void main() {
     testWidgets('Does not sign a user up if a user already exists with the same email', (WidgetTester tester) async {
       when(authMock.signUp(validEmail, validPassword))
           .thenThrow(StateError(firebaseAuthErrorExistingEmail));
-      await completeValidSignUp(tester);
+      await fillInFormAndSubmit(tester);
       await tester.pump();
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
@@ -272,7 +272,7 @@ void main() {
     });
 
     testWidgets('Calls signUp when valid details entered and button tapped', (WidgetTester tester) async {
-      await completeValidSignUp(tester);
+      await fillInFormAndSubmit(tester);
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
       verify(userStatusMock.signInUser()).called(1);
@@ -280,7 +280,7 @@ void main() {
     });
 
     testWidgets('On valid sign up navigates away from the registration page', (WidgetTester tester) async {
-      await completeValidSignUp(tester);
+      await fillInFormAndSubmit(tester);
 
       verify(authMock.signUp(validEmail, validPassword)).called(1);
       verify(userStatusMock.signInUser()).called(1);
