@@ -102,6 +102,26 @@ void main() {
 
         expect(find.text(notAPasswordWarning), findsOneWidget);
       });
+
+      testWidgets('''Warning message stays on screen after first invalid attempt
+          from user until the validity criteria are met''', (WidgetTester tester) async {
+          await tester.pumpWidget(app);
+          await tester.enterText(email, validEmail);
+          await tester.enterText(password, invalidPassword);
+          await tester.tap(login);
+          await tester.pump();
+
+          expect(find.text(notAPasswordWarning), findsOneWidget);
+
+          await tester.pump();
+
+          expect(find.text(notAPasswordWarning), findsOneWidget);
+
+          await tester.enterText(password, validPassword);
+          await tester.pumpAndSettle();
+
+          expect(find.text(notAPasswordWarning), findsNothing);
+      });
     });
 
     group('Valid inputs', () {

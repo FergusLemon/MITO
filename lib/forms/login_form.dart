@@ -18,6 +18,7 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _autoValidate = false;
   bool _registeredUser = true;
   bool _correctPassword = true;
 
@@ -36,10 +37,17 @@ class _LoginFormState extends State<LoginForm> {
     _correctPassword = true;
   }
 
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
         key: _formKey,
+        autovalidate: _autoValidate,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -99,8 +107,9 @@ class _LoginFormState extends State<LoginForm> {
         }
       }
     } else {
-      print('Sign in Unsuccessful');
+      setState(() => _autoValidate = true);
     }
+    return null;
   }
 
   String _validateEmail(String value) {
