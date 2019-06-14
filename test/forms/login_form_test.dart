@@ -105,6 +105,15 @@ void main() {
     });
 
     group('Valid inputs', () {
+      setUp(() {
+        when(authMock.signIn(validEmail, validPassword))
+            .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
+      });
+      tearDown(() {
+        clearInteractions(authMock);
+        clearInteractions(userStatusMock);
+      });
+
       testWidgets('User is not shown any warnings if they enter valid details', (WidgetTester tester) async {
         await completeValidLogin(tester);
 
@@ -113,6 +122,50 @@ void main() {
         expect(find.text(missingPasswordWarning), findsNothing);
         expect(find.text(notAPasswordWarning), findsNothing);
       });
+    });
+  });
+
+  group('Valid sign in with email and password', () {
+    setUp(() {
+      when(authMock.signIn(validEmail, validPassword))
+          .thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
+    });
+    tearDown(() {
+      clearInteractions(authMock);
+      clearInteractions(userStatusMock);
+    });
+
+    testWidgets('Calls signIn when valid details entered and button tapped', (WidgetTester tester) async {
+      await completeValidLogin(tester);
+
+      verify(authMock.signIn(validEmail, validPassword)).called(1);
+      verify(userStatusMock.signInUser()).called(1);
+    });
+
+    testWidgets('On valid sign in navigates user to the Home Page', (WidgetTester tester) async {
+      Widget testApp = InheritedUserServices(
+          auth: authMock,
+          userStatus: userStatusMock,
+          firestore: firestoreMock,
+          child: MaterialApp(
+            home: LandingPage(),
+          )
+      );
+      when(userStatusMock.isSignedIn()).thenReturn(false);
+
+      await tester.pumpWidget(testApp);
+      await tester.tap(find.byKey(LandingPage.navigateToLoginButtonKey));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(email, validEmail);
+      await tester.enterText(password, validPassword);
+      await tester.tap(login);
+      when(userStatusMock.isSignedIn()).thenReturn(true);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Email'), findsNothing);
+      expect(find.text('Password'), findsNothing);
+      expect(find.byType(HomePage), findsOneWidget);
     });
   });
 }

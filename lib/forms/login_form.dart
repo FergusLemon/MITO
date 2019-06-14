@@ -15,6 +15,8 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -28,6 +30,7 @@ class _LoginFormState extends State<LoginForm> {
                       labelText: 'Email',
                   ),
                   validator: _validateEmail,
+                  controller: _emailController,
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -36,6 +39,8 @@ class _LoginFormState extends State<LoginForm> {
                       labelText: 'Password',
                   ),
                   validator: _validatePassword,
+                  controller: _passwordController,
+                  obscureText: true,
               ),
               SizedBox(height: 10.0),
               RaisedButton(
@@ -57,7 +62,15 @@ class _LoginFormState extends State<LoginForm> {
   void _attemptLogin() async {
     final form = _formKey.currentState;
     if (form.validate()) {
-      print('Sign in Successful');
+      try {
+        final auth = InheritedUserServices.of(context).auth;
+        final userStatus = InheritedUserServices.of(context).userStatus;
+        String uid = await auth.signIn(_emailController.text, _passwordController.text);
+        userStatus.signInUser();
+        Navigator.of(context).pop();
+      } catch(e) {
+        print('$e');
+      }
     } else {
       print('Sign in Unsuccessful');
     }

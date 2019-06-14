@@ -12,3 +12,4 @@ const notSamePasswordWarning = 'The passwords entered do not match.';
 
 // firebase auth errors
 const firebaseAuthErrorExistingEmail = 'The email address is already in use by another account.';
+const firebaseInvalidUserOrPassword = 'The password is invalid or the user does not have a password.';
