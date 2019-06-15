@@ -63,7 +63,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 validator: _validateFirstName,
                 controller: _firstNameController,
               ),
-              SizedBox(height: 12.0),
+              SizedBox(height: 15.0),
               TextFormField(
                 key: RegistrationForm.lastNameKey,
                 decoration: const InputDecoration(
@@ -72,7 +72,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 validator: _validateLastName,
                 controller: _lastNameController,
               ),
-              SizedBox(height: 12.0),
+              SizedBox(height: 15.0),
               TextFormField(
                 key: RegistrationForm.emailKey,
                 decoration: const InputDecoration(
@@ -81,7 +81,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 validator: _validateEmail,
                 controller: _emailController,
               ),
-              SizedBox(height: 12.0),
+              SizedBox(height: 15.0),
               TextFormField(
                 key: RegistrationForm.passwordKey,
                 decoration: const InputDecoration(
@@ -91,7 +91,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 controller: _passwordController,
                 obscureText: true,
               ),
-              SizedBox(height: 12.0),
+              SizedBox(height: 15.0),
               TextFormField(
                 key: RegistrationForm.passwordConfirmKey,
                 decoration: const InputDecoration(
@@ -100,20 +100,26 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 validator: _confirmPassword,
                 obscureText: true,
               ),
-              SizedBox(height: 10.0),
-              RaisedButton(
-                key: RegistrationForm.signUpKey,
-                onPressed: _attemptSignUp,
-                child: const Text(
-                  'SIGN UP',
-                ),
-                color: Colors.red,
-                textColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius:
-                  BorderRadius.circular(30.0),
+              SizedBox(height: 20.0),
+              SizedBox(
+                width: double.infinity,
+                child: RaisedButton(
+                  key: RegistrationForm.signUpKey,
+                  onPressed: _attemptSignUp,
+                  child: const Text(
+                    'SIGN UP',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  color: Colors.red,
+                  textColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius:
+                    BorderRadius.circular(30.0),
+                  ),
                 ),
               ),
-              SizedBox(height: 20.0),
+              SizedBox(height: 10.0),
               FlatButton(
                   key: RegistrationForm.navigateToLogin,
                   onPressed: () => _navigateToLoginPage(context),

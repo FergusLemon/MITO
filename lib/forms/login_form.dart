@@ -59,7 +59,7 @@ class _LoginFormState extends State<LoginForm> {
                   validator: _validateEmail,
                   controller: _emailController,
               ),
-              SizedBox(height: 12.0),
+              SizedBox(height: 15.0),
               TextFormField(
                   key: LoginForm.passwordKey,
                   decoration: const InputDecoration(
@@ -69,17 +69,24 @@ class _LoginFormState extends State<LoginForm> {
                   controller: _passwordController,
                   obscureText: true,
               ),
-              SizedBox(height: 10.0),
-              RaisedButton(
+              SizedBox(height: 20.0),
+              SizedBox(
+                width: double.infinity,
+                child: RaisedButton(
                   key: LoginForm.loginKey,
                   onPressed: _attemptLogin,
                   child: const Text(
-                      'LOGIN',
+                    'LOGIN',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
                   ),
                   color: Colors.red,
                   textColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius:
-                    BorderRadius.circular(30.0)),
+                    BorderRadius.circular(30.0)
+                  ),
+                ),
               ),
             ],
         ),
