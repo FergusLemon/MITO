@@ -8,6 +8,7 @@ class LoginForm extends StatefulWidget {
   static const loginKey = Key('Login button');
   static const emailKey = Key('Email field');
   static const passwordKey = Key('Password field');
+  static const googleSignInKey = Key('Google sign in button');
   const LoginForm({Key key}) : super(key: key);
 
   @override
@@ -88,6 +89,25 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
               ),
+              SizedBox(height: 20.0),
+              SizedBox(
+                width: double.infinity,
+                child: RaisedButton(
+                  key: LoginForm.googleSignInKey,
+                  onPressed: _attemptSignInWithGoogle,
+                  child: const Text(
+                    'Sign In With Google',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  color: Colors.blue,
+                  textColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius:
+                    BorderRadius.circular(30.0)
+                  ),
+                ),
+              ),
             ],
         ),
     );
@@ -115,6 +135,19 @@ class _LoginFormState extends State<LoginForm> {
       }
     } else {
       setState(() => _autoValidate = true);
+    }
+    return null;
+  }
+
+  void _attemptSignInWithGoogle() async {
+    try {
+      final auth = InheritedUserServices.of(context).auth;
+      final userStatus = InheritedUserServices.of(context).userStatus;
+      String uid = await auth.signInWithGoogle();
+      userStatus.signInUser();
+      Navigator.of(context).pop();
+    } catch(e) {
+      print('$e');
     }
     return null;
   }
