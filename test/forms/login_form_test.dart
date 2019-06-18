@@ -61,7 +61,7 @@ void main() {
   testWidgets('Renders', (WidgetTester tester) async {
     await tester.pumpWidget(app);
 
-    expect(find.text('Login'), findsOneWidget);
+    expect(find.text('Sign in with Email'), findsOneWidget);
     expect(find.text('Sign in with Google'), findsOneWidget);
     expect(find.byType(TextFormField), findsNWidgets(2));
     expect(find.byType(RaisedButton), findsNWidgets(2));
