@@ -76,35 +76,56 @@ class _LoginFormState extends State<LoginForm> {
                 child: RaisedButton(
                   key: LoginForm.loginKey,
                   onPressed: _attemptLogin,
-                  child: const Text(
-                    'LOGIN',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  ),
                   color: Colors.red,
-                  textColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius:
-                    BorderRadius.circular(30.0)
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.email,
+                        size: 24.0,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 24.0),
+                      ),
+                      Text(
+                        'Sign in with Email',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              SizedBox(height: 20.0),
+              SizedBox(height: 10.0),
               SizedBox(
                 width: double.infinity,
                 child: RaisedButton(
                   key: LoginForm.googleSignInKey,
                   onPressed: _attemptSignInWithGoogle,
-                  child: const Text(
-                    'Sign In With Google',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius:
-                    BorderRadius.circular(30.0)
+                  color: Colors.white,
+                  child: Row(
+                    children: <Widget>[
+                      Image.asset(
+                        'assets/images/google/glogo.png',
+                        height: 24.0,
+                        width: 24.0,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 24.0),
+                      ),
+                      Text(
+                        'Sign in with Google',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20.0,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
