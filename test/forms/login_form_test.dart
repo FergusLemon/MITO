@@ -44,6 +44,14 @@ void main() {
       ),
     ),
   );
+  Widget landingPageApp = InheritedUserServices(
+    auth: authMock,
+    userStatus: userStatusMock,
+    firestore: firestoreMock,
+    child: MaterialApp(
+      home: LandingPage(),
+    )
+  );
 
   final Finder login = find.byKey(LoginForm.loginKey);
   final Finder email = find.byKey(LoginForm.emailKey);
@@ -177,17 +185,9 @@ void main() {
       });
 
       testWidgets('On valid sign in navigates user to the Home Page', (WidgetTester tester) async {
-        Widget testApp = InheritedUserServices(
-            auth: authMock,
-            userStatus: userStatusMock,
-            firestore: firestoreMock,
-            child: MaterialApp(
-              home: LandingPage(),
-            )
-        );
         when(userStatusMock.isSignedIn()).thenReturn(false);
 
-        await tester.pumpWidget(testApp);
+        await tester.pumpWidget(landingPageApp);
         await tester.tap(find.byKey(LandingPage.navigateToLoginButtonKey));
         await tester.pumpAndSettle();
 
@@ -232,8 +232,19 @@ void main() {
   });
 
   group('Sign in with Google', () {
+    tearDown(() {
+      clearInteractions(googleSignInMock);
+      clearInteractions(googleSignInAccountMock);
+      clearInteractions(googleSignInAuthMock);
+      clearInteractions(authCredentialMock);
+      clearInteractions(firebaseAuthMock);
+      clearInteractions(authMock);
+      clearInteractions(userStatusMock);
+    });
+
     group('Success cases', () {
       setUp(() {
+        when(userStatusMock.isSignedIn()).thenReturn(false);
         when(googleSignInMock.signIn())
             .thenAnswer((_) => Future<GoogleSignInAccountMock>.value(googleSignInAccountMock));
         when(googleSignInAccountMock.authentication)
@@ -241,15 +252,6 @@ void main() {
         when(firebaseAuthMock.signInWithCredential(authCredentialMock))
             .thenAnswer((_) => Future<FirebaseUserMock>.value(firebaseUserMock));
         when(authMock.signInWithGoogle()).thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
-      });
-      tearDown(() {
-        clearInteractions(googleSignInMock);
-        clearInteractions(googleSignInAccountMock);
-        clearInteractions(googleSignInAuthMock);
-        clearInteractions(authCredentialMock);
-        clearInteractions(firebaseAuthMock);
-        clearInteractions(authMock);
-        clearInteractions(userStatusMock);
       });
 
       testWidgets('signs a user in', (WidgetTester tester) async {
@@ -259,6 +261,20 @@ void main() {
 
         verify(authMock.signInWithGoogle()).called(1);
         verify(userStatusMock.signInUser()).called(1);
+      });
+
+      testWidgets('Navigates the user to the Home Page', (WidgetTester tester) async {
+        await tester.pumpWidget(landingPageApp);
+        await tester.tap(find.byKey(LandingPage.navigateToLoginButtonKey));
+        await tester.pumpAndSettle();
+
+        await tester.tap(signInWithGoogle);
+        when(userStatusMock.isSignedIn()).thenReturn(true);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Email'), findsNothing);
+        expect(find.text('Password'), findsNothing);
+        expect(find.byType(HomePage), findsOneWidget);
       });
     });
   });
