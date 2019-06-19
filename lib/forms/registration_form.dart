@@ -114,9 +114,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   ),
                   color: Colors.red,
                   textColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius:
-                    BorderRadius.circular(30.0),
-                  ),
                 ),
               ),
               SizedBox(height: 10.0),

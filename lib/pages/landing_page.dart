@@ -71,9 +71,6 @@ class _LandingPageState extends State<LandingPage> {
                         ),
                         color: Colors.red,
                         textColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius:
-                          BorderRadius.circular(30.0)
-                        ),
                       ),
                     ),
                   ),
@@ -95,9 +92,6 @@ class _LandingPageState extends State<LandingPage> {
                         ),
                         color: Colors.white,
                         textColor: Colors.red,
-                        shape: RoundedRectangleBorder(borderRadius:
-                          BorderRadius.circular(30.0)
-                        ),
                       ),
                     ),
                   ),
