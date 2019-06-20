@@ -10,7 +10,7 @@ import 'package:mito/pages/login_page.dart';
 import 'package:mito/forms/registration_form.dart';
 import 'package:mito/inherited_user_services.dart';
 import 'package:mito/services/user_status.dart';
-import 'package:mito/helpers/validation_warnings.dart';
+import 'package:mito/helpers/form_helpers.dart';
 
 import '../helpers/form_validation_helpers.dart';
 import '../mocks/auth_mock.dart';

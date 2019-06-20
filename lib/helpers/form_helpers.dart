@@ -18,6 +18,10 @@ const incorrectPasswordWarning = 'The password entered is incorrect.';
 const firebaseAuthErrorExistingEmail = 'The email address is already in use by another account.';
 const firebaseInvalidPassword = 'The password is invalid or the user does not have a password.';
 const firebaseUserNotFound = 'There is no user record corresponding to this identifier. The user may have been deleted.';
+const firebaseAuthError = "Something went wrong on MITO's end when trying to sign in with Google";
 
 // registration form message
-const goToLoginPage = 'Already got an account? Login.';
+const goToLoginPage = 'Already got an account? Want to sign in with Google? Click here';
+
+// Google sign in error
+const googleSignInErrorMessage = 'Something went wrong when trying to sign in with Google';

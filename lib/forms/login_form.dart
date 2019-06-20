@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mito/inherited_user_services.dart';
 import '../helpers/email_validator.dart';
 import '../helpers/password_validator.dart';
-import '../helpers/validation_warnings.dart';
+import '../helpers/form_helpers.dart';
 
 class LoginForm extends StatefulWidget {
   static const loginKey = Key('Login button');
@@ -168,6 +168,7 @@ class _LoginFormState extends State<LoginForm> {
       userStatus.signInUser();
       Navigator.of(context).pop();
     } catch(e) {
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text(googleSignInErrorMessage)));
       print('$e');
     }
     return null;

@@ -9,7 +9,7 @@ import 'package:mito/pages/landing_page.dart';
 import 'package:mito/forms/login_form.dart';
 import 'package:mito/inherited_user_services.dart';
 import 'package:mito/services/user_status.dart';
-import 'package:mito/helpers/validation_warnings.dart';
+import 'package:mito/helpers/form_helpers.dart';
 
 import '../helpers/form_validation_helpers.dart';
 import '../mocks/auth_mock.dart';
@@ -277,5 +277,25 @@ void main() {
         expect(find.byType(HomePage), findsOneWidget);
       });
     });
+
+    group('Error cases', () {
+      testWidgets('User is shown a message when Google sign in fails', (WidgetTester tester) async {
+          when(userStatusMock.isSignedIn()).thenReturn(false);
+          when(googleSignInMock.signIn())
+              .thenAnswer((_) => Future<GoogleSignInAccountMock>.value(googleSignInAccountMock));
+          when(googleSignInAccountMock.authentication)
+              .thenAnswer((_) => Future<GoogleSignInAuthMock>.value(googleSignInAuthMock));
+          when(firebaseAuthMock.signInWithCredential(authCredentialMock))
+              .thenAnswer((_) => Future<FirebaseUserMock>.value(firebaseUserMock));
+          when(authMock.signInWithGoogle()).thenThrow(StateError(googleSignInErrorMessage));
+
+          await tester.pumpWidget(app);
+          await tester.tap(signInWithGoogle);
+          await tester.pumpAndSettle();
+
+          verifyNever(userStatusMock.signInUser());
+          expect(find.text(googleSignInErrorMessage), findsOneWidget);
+        });
+      });
   });
 }

@@ -3,7 +3,7 @@ import 'package:mito/inherited_user_services.dart';
 import 'package:mito/pages/login_page.dart';
 import '../helpers/email_validator.dart';
 import '../helpers/password_validator.dart';
-import '../helpers/validation_warnings.dart';
+import '../helpers/form_helpers.dart';
 
 class RegistrationForm extends StatefulWidget {
   static const firstNameKey = Key('First Name');
@@ -121,7 +121,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   key: RegistrationForm.navigateToLogin,
                   onPressed: () => _navigateToLoginPage(context),
                   child: Text(
-                     'Already got an account? Login.',
+                     goToLoginPage,
                   ),
               ),
             ],
