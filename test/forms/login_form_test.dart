@@ -279,23 +279,39 @@ void main() {
     });
 
     group('Error cases', () {
-      testWidgets('User is shown a message when Google sign in fails', (WidgetTester tester) async {
-          when(userStatusMock.isSignedIn()).thenReturn(false);
-          when(googleSignInMock.signIn())
-              .thenAnswer((_) => Future<GoogleSignInAccountMock>.value(googleSignInAccountMock));
-          when(googleSignInAccountMock.authentication)
-              .thenAnswer((_) => Future<GoogleSignInAuthMock>.value(googleSignInAuthMock));
-          when(firebaseAuthMock.signInWithCredential(authCredentialMock))
-              .thenAnswer((_) => Future<FirebaseUserMock>.value(firebaseUserMock));
-          when(authMock.signInWithGoogle()).thenThrow(StateError(googleSignInErrorMessage));
+      setUp(() {
+        when(userStatusMock.isSignedIn()).thenReturn(false);
+        when(googleSignInMock.signIn())
+            .thenAnswer((_) => Future<GoogleSignInAccountMock>.value(googleSignInAccountMock));
+        when(googleSignInAccountMock.authentication)
+            .thenAnswer((_) => Future<GoogleSignInAuthMock>.value(googleSignInAuthMock));
+        when(firebaseAuthMock.signInWithCredential(authCredentialMock))
+            .thenAnswer((_) => Future<FirebaseUserMock>.value(firebaseUserMock));
+        when(authMock.signInWithGoogle()).thenThrow(StateError(googleSignInErrorMessage));
+      });
 
+      testWidgets('User is shown a message when Google sign in fails', (WidgetTester tester) async {
           await tester.pumpWidget(app);
           await tester.tap(signInWithGoogle);
           await tester.pumpAndSettle();
 
           verifyNever(userStatusMock.signInUser());
           expect(find.text(googleSignInErrorMessage), findsOneWidget);
-        });
       });
+
+      testWidgets('Message is shown for a duration and then removed', (WidgetTester tester) async {
+          await tester.pumpWidget(app);
+          await tester.tap(signInWithGoogle);
+          await tester.pumpAndSettle();
+
+          verifyNever(userStatusMock.signInUser());
+          expect(find.text(googleSignInErrorMessage), findsOneWidget);
+
+          await tester.pump(Duration(seconds: errorMessageDuration + 1));
+          await tester.pumpAndSettle();
+
+          expect(find.text(googleSignInErrorMessage), findsNothing);
+      });
+    });
   });
 }

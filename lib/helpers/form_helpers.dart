@@ -25,3 +25,4 @@ const goToLoginPage = 'Already got an account? Want to sign in with Google? Clic
 
 // Google sign in error
 const googleSignInErrorMessage = 'Something went wrong when trying to sign in with Google';
+const errorMessageDuration = 8;

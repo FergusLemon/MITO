@@ -168,7 +168,10 @@ class _LoginFormState extends State<LoginForm> {
       userStatus.signInUser();
       Navigator.of(context).pop();
     } catch(e) {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text(googleSignInErrorMessage)));
+      Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text(googleSignInErrorMessage),
+              duration: Duration(seconds: errorMessageDuration),
+              ));
       print('$e');
     }
     return null;
