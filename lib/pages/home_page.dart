@@ -14,6 +14,16 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.account_circle),
+              onPressed: () => {},
+          ),
+          IconButton(
+              icon: Icon(Icons.map),
+              onPressed: () => {},
+          ),
+        ],
       ),
       body: Text('Hello User'),
       );
