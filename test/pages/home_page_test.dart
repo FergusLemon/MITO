@@ -25,6 +25,6 @@ void main() {
   testWidgets("Renders content", (WidgetTester tester) async {
     await _buildHomePage(tester);
     expect(find.text('Home'), findsOneWidget);
-    expect(find.byType(IconButton),findsNWidgets(2));
+    expect(find.byType(IconButton),findsNWidgets(3));
   });
 }

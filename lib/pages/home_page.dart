@@ -16,17 +16,40 @@ class _HomePageState extends State<HomePage> {
         title: Text('Home'),
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.account_circle),
+              icon: Icon(choices[0].icon),
               onPressed: () => {},
           ),
           IconButton(
-              icon: Icon(Icons.map),
+              icon: Icon(choices[1].icon),
               onPressed: () => {},
+          ),
+          PopupMenuButton<Choice>(
+              //onSelected: () => {},
+              itemBuilder: (BuildContext context) {
+                return choices.map((Choice choice) {
+                  return PopupMenuItem<Choice>(
+                      value: choice,
+                      child: Text(choice.title),
+                  );
+                }).toList();
+              }
           ),
         ],
       ),
       body: Text('Hello User'),
       );
   }
-
 }
+
+class Choice {
+  const Choice({this.title, this.icon});
+
+  final String title;
+  final IconData icon;
+}
+
+const List<Choice> choices = const <Choice>[
+  const Choice(title: 'Profile', icon: Icons.account_circle),
+  const Choice(title: 'Map', icon: Icons.map),
+  const Choice(title: 'Sign Out', icon: Icons.exit_to_app),
+];
