@@ -164,9 +164,20 @@ class _LoginFormState extends State<LoginForm> {
     try {
       final auth = InheritedUserServices.of(context).auth;
       final userStatus = InheritedUserServices.of(context).userStatus;
-      String uid = await auth.signInWithGoogle();
-      userStatus.signInUser();
-      Navigator.of(context).pop();
+      final store = InheritedUserServices.of(context).firestore;
+      Map user = await auth.signInWithGoogle();
+      final userProfile = {
+        'email': user['email'],
+        'firstName': '',
+        'lastName': '',
+      };
+      try {
+        await store.collection('users').document(user['uid']).setData(userProfile);
+        userStatus.signInUser();
+        Navigator.of(context).pop();
+      } catch(e) {
+        print('$e');
+      }
     } catch(e) {
       Scaffold.of(context).showSnackBar(SnackBar(
               content: Text(googleSignInErrorMessage),

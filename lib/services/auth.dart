@@ -5,7 +5,7 @@ import 'dart:async';
 abstract class BaseAuth {
   Future<String> signUp(String email, String password);
   Future<String> signIn(String email, String password);
-  Future<String> signInWithGoogle();
+  Future<Map> signInWithGoogle();
 }
 
 class Auth implements BaseAuth {
@@ -20,11 +20,11 @@ class Auth implements BaseAuth {
     final FirebaseUser user = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
     return user.uid;
   }
-  Future<String> signInWithGoogle() async {
+  Future<Map> signInWithGoogle() async {
     final GoogleSignInAccount googleAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleAccount.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
     final FirebaseUser user = await firebaseAuth.signInWithCredential(credential);
-    return user.uid;
+    return { 'uid': user.uid, 'email': user.email };
   }
 }

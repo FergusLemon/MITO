@@ -17,6 +17,8 @@ import '../mocks/user_status_mock.dart';
 import '../mocks/firebase_auth_mock.dart';
 import '../mocks/firebase_user_mock.dart';
 import '../mocks/firestore_mock.dart';
+import '../mocks/collection_reference_mock.dart';
+import '../mocks/document_reference_mock.dart';
 import '../mocks/google_sign_in_mock.dart';
 import '../mocks/google_sign_in_account_mock.dart';
 import '../mocks/google_sign_in_auth_mock.dart';
@@ -28,6 +30,8 @@ void main() {
   final firebaseUserMock = FirebaseUserMock();
   final userStatusMock = UserStatusMock();
   final firestoreMock = FirestoreMock();
+  final collectionReferenceMock = CollectionReferenceMock();
+  final documentReferenceMock = DocumentReferenceMock();
   final googleSignInMock = GoogleSignInMock();
   final googleSignInAccountMock = GoogleSignInAccountMock();
   final googleSignInAuthMock = GoogleSignInAuthMock();
@@ -243,6 +247,7 @@ void main() {
     });
 
     group('Success cases', () {
+      var mockData;
       setUp(() {
         when(userStatusMock.isSignedIn()).thenReturn(false);
         when(googleSignInMock.signIn())
@@ -251,7 +256,24 @@ void main() {
             .thenAnswer((_) => Future<GoogleSignInAuthMock>.value(googleSignInAuthMock));
         when(firebaseAuthMock.signInWithCredential(authCredentialMock))
             .thenAnswer((_) => Future<FirebaseUserMock>.value(firebaseUserMock));
-        when(authMock.signInWithGoogle()).thenAnswer((_) => Future<String>.value(firebaseUserMock.uid));
+        when(authMock.signInWithGoogle())
+            .thenAnswer((_) => Future<Map>.value({'uid': firebaseUserMock.uid, 'email': firebaseUserMock.email}));
+        mockData = { 'email': validEmail, 'firstName': '', 'lastName': '' };
+        when(firestoreMock.collection('users')).thenReturn(collectionReferenceMock);
+        when(collectionReferenceMock.document(firebaseUserMock.uid))
+            .thenReturn(documentReferenceMock);
+        when(documentReferenceMock.setData(mockData)).thenAnswer((_) => Future<void>.value(true));
+      });
+
+      tearDown(() {
+        clearInteractions(userStatusMock);
+        clearInteractions(googleSignInMock);
+        clearInteractions(googleSignInAccountMock);
+        clearInteractions(firebaseAuthMock);
+        clearInteractions(authMock);
+        clearInteractions(firestoreMock);
+        clearInteractions(collectionReferenceMock);
+        clearInteractions(documentReferenceMock);
       });
 
       testWidgets('signs a user in', (WidgetTester tester) async {
@@ -261,6 +283,14 @@ void main() {
 
         verify(authMock.signInWithGoogle()).called(1);
         verify(userStatusMock.signInUser()).called(1);
+      });
+
+      testWidgets('creates a user in the DB if none exists', (WidgetTester tester) async {
+        await tester.pumpWidget(app);
+        await tester.tap(signInWithGoogle);
+        await tester.pump();
+
+        verify(documentReferenceMock.setData(mockData)).called(1);
       });
 
       testWidgets('Navigates the user to the Home Page', (WidgetTester tester) async {
