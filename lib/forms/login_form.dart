@@ -172,7 +172,11 @@ class _LoginFormState extends State<LoginForm> {
         'lastName': '',
       };
       try {
-        await store.collection('users').document(user['uid']).setData(userProfile);
+        var documentReference = await store.collection('users').document(user['uid']);
+        var documentSnapshot = await documentReference.get();
+        if (!documentSnapshot.exists) {
+          await store.collection('users').document(user['uid']).setData(userProfile);
+        }
         userStatus.signInUser();
         Navigator.of(context).pop();
       } catch(e) {

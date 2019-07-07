@@ -17,6 +17,7 @@ import '../mocks/user_status_mock.dart';
 import '../mocks/firebase_auth_mock.dart';
 import '../mocks/firebase_user_mock.dart';
 import '../mocks/firestore_mock.dart';
+import '../mocks/document_snapshot_mock.dart';
 import '../mocks/collection_reference_mock.dart';
 import '../mocks/document_reference_mock.dart';
 import '../mocks/google_sign_in_mock.dart';
@@ -30,6 +31,7 @@ void main() {
   final firebaseUserMock = FirebaseUserMock();
   final userStatusMock = UserStatusMock();
   final firestoreMock = FirestoreMock();
+  final documentSnapshotMock = DocumentSnapshotMock();
   final collectionReferenceMock = CollectionReferenceMock();
   final documentReferenceMock = DocumentReferenceMock();
   final googleSignInMock = GoogleSignInMock();
@@ -263,6 +265,8 @@ void main() {
         when(collectionReferenceMock.document(firebaseUserMock.uid))
             .thenReturn(documentReferenceMock);
         when(documentReferenceMock.setData(mockData)).thenAnswer((_) => Future<void>.value(true));
+        when(documentReferenceMock.get())
+            .thenAnswer((_) => Future<DocumentSnapshotMock>.value(documentSnapshotMock));
       });
 
       tearDown(() {
@@ -274,6 +278,7 @@ void main() {
         clearInteractions(firestoreMock);
         clearInteractions(collectionReferenceMock);
         clearInteractions(documentReferenceMock);
+        clearInteractions(documentSnapshotMock);
       });
 
       testWidgets('signs a user in', (WidgetTester tester) async {
@@ -286,11 +291,21 @@ void main() {
       });
 
       testWidgets('creates a user in the DB if none exists', (WidgetTester tester) async {
+        documentSnapshotMock.exists = false;
         await tester.pumpWidget(app);
         await tester.tap(signInWithGoogle);
         await tester.pump();
 
         verify(documentReferenceMock.setData(mockData)).called(1);
+      });
+
+      testWidgets('does not create a user if the user already exists', (WidgetTester tester) async {
+        documentSnapshotMock.exists = true;
+        await tester.pumpWidget(app);
+        await tester.tap(signInWithGoogle);
+        await tester.pump();
+
+        verifyNever(documentReferenceMock.setData(mockData));
       });
 
       testWidgets('Navigates the user to the Home Page', (WidgetTester tester) async {
