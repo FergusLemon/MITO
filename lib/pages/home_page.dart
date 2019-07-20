@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Text('Hello User'),
+      body: Text(""),
       );
   }
 }
